@@ -1,8 +1,50 @@
+/* Constants */
+:root {
+  /* Main colours */
+  --primary: #CD23B9;
+  --secondary: #730064;
+  --accent: #CD23B9;
+  --accent-bright: #FFFFFF;
+  --background: #1D0021;
+  --background-bright: #3B0034;
+
+  /* CRT colours */
+  --crt-dark: #000000FF;
+  --crt-transparent: #00000000;
+  --crt-flicker-colour: #12101033;
+  --crt-phosphor-red: #FF3100;
+  --crt-phosphor-green: #83FF00;
+  --crt-phosphor-blue: #007CFF;
+
+  /* CRT anim properties */
+  --crt-anim-jitter-diff: 1px;
+
+  /* Other CRT properties */
+  --crt-pre-blur: 1.5px;
+  --crt-post-brightness: 1.5;
+}
+
 body {
-  background-color: #1D0021;
-  color: #CD23B9;
+  background-color: var(--background);
+  color: var(--primary);
   font-family: 'Courier New', monospace;
   text-align: center;
+}
+
+h1 {
+  font-size: 70px;
+}
+
+h2 {
+  font-size: 55px;
+}
+
+h3 {
+  font-size: 35px;
+}
+
+p {
+  font-size: 35px;
 }
 
 img {
@@ -11,28 +53,20 @@ img {
   margin-right: auto;
 }
 
-::-moz-selection {
-  color: #FFFFFF;
-  background: #CD23B9;
-}
-
 ::selection {
-  color: #FFFFFF;
-  background: #CD23B9;
+  background: var(--accent);
+  color: var(--accent-bright);
 }
 
 a {
-  color: #CD23B9;
+  color: var(--accent);
+  font-size: 35px;
 }
 
 .centre {
-  margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 p {
@@ -48,9 +82,9 @@ p {
 }
 
 .button {
-  background-color: #1D0021;
+  background-color: var(--background);
+  color: var(--primary);
   border: none;
-  color: #CD23B9;
   padding: 0;
   text-align: center;
   text-decoration: none;
@@ -59,80 +93,139 @@ p {
   cursor: pointer;
 }
 
-/*
-CRT effect taken from:
-  https://aleclownes.com/2017/02/01/crt-display.html
-  https://stackoverflow.com/questions/371209/full-page-blur-in-css
-  Plus some of my own modifications :p
-*/
-
+/* Stretches implementing div over entire viewport so it acts as a filter */
 .screen-filter {
+  content: " ";
+  display: block;
   position: fixed;
-  width: 100vw;
-  height: 100vh;
+
   top: 0;
   left: 0;
+  right: 0;
+  bottom: 0;
+
+  width: 100vw;
+  height: 100vh;
+
   pointer-events: none;
+  z-index: 2;
 }
 
-.burnt-in {
+/* Opacity of content burnt in to CRT */
+.crt-burnt-in {
   opacity: 0.02;
 }
 
 /* Flicker */
-.crt::after {
-  content: " ";
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: rgba(18, 16, 16, 0.1);
+.crt-flicker {
+  background: var(--crt-flicker-colour);
   opacity: 0;
-  z-index: 2;
-  pointer-events: none;
-  animation: flicker 0.15s infinite;
-  -webkit-animation: flicker 0.15s infinite;
+  animation: crt-anim-flicker 0.15s infinite;
 }
 
-/* Scan Lines */
-.crt::before {
-  content: " ";
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-  z-index: 2;
-  background-size: 100% 2px, 3px 100%;
-  pointer-events: none;
+/* TODO: Constants and variables */
+
+/*
+  Uses phosphor wavelengths from real CRTs, specifically the set of P22 phosphors for colour CRT displays
+
+  Sources:
+    Phosphor wavelengths: https://www.labguysworld.com/crt_phosphor_research.pdf
+    Wavelength to RGB converter, by an optics company: https://syronoptics.com/blogs/tools/wavelength-to-color-converter
+    Idea: https://publish.obsidian.md/xybre/permalink/e397c38e-aa6f-45eb-831f-f02a3836abc4
+*/
+.crt-dot-mask {
+  /* Recreation of dot mask's phosphor layout */
+  background-size: 8px 4px;
+  background-blend-mode: overlay;
+  background-image:
+    linear-gradient(
+      var(--crt-dark)
+    ),
+    radial-gradient(
+      circle
+      closest-side at 10% 35%,
+      var(--crt-phosphor-green) 100%, /* 526 nm */
+      var(--crt-transparent) 100%
+    ),
+    radial-gradient(
+      circle
+      closest-side at 40% 30%,
+      var(--crt-phosphor-blue) 80%, /* 526 nm */
+      var(--crt-transparent) 80%
+    ),
+    radial-gradient(
+      circle
+      closest-side at 30% 80%,
+      var(--crt-phosphor-red) 100%, /* 526 nm */
+      var(--crt-transparent) 100%
+    ),
+    radial-gradient(
+      circle
+      closest-side at 60% 80%,
+      var(--crt-phosphor-green) 100%, /* 526 nm */
+      var(--crt-transparent) 100%
+    ),
+    radial-gradient(
+      circle
+      closest-side at 90% 75%,
+      var(--crt-phosphor-blue) 100%, /* 526 nm */
+      var(--crt-transparent) 100%
+    ),
+    radial-gradient(
+      circle
+      closest-side at 75% 35%,
+      var(--crt-phosphor-red) 65%, /* 526 nm */
+      var(--crt-transparent) 65%
+    );
+  
+  /* Apply colours to content behind */
+  mix-blend-mode: multiply;
 }
 
-/* Blur */
-.crt-content {
-  /* Any browser which supports CSS3 */
-  filter: blur(1px);
-
-  /* Firefox version 34 and earlier */
-  filter: url("assets/blur.svg#gaussian_blur");
-
-  /* Webkit in Chrome 52, Safari 9, Opera 39, and earlier */
-  -webkit-filter: blur(1px);
+.crt-shadow-mask {
+  /* Recreation of shadow mask's phosphor layout */
+  background-size: 8px 4px;
+  background-blend-mode: overlay;
+  background-image:
+    linear-gradient(
+      to right,
+      var(--crt-dark) 10%, /* Left padding end */
+      var(--crt-phosphor-red) 10% 30%, /* 643 nm */
+      var(--crt-dark) 30% 40%,
+      var(--crt-phosphor-green) 40% 60%, /* 526 nm */
+      var(--crt-dark) 60% 70%,
+      var(--crt-phosphor-blue) 70% 90%, /* 450 nm */
+      var(--crt-dark) 90% /* Right padding start */
+    ),
+    linear-gradient(
+      to bottom,
+      var(--crt-transparent) 70%,
+      var(--crt-dark) 70%
+    );
+  
+  /* Apply colours to content behind */
+  mix-blend-mode: multiply;
 }
 
-/* Simulate visual artefact of interlacing */
+/* Blur before the CRT mask to increase colour clarity and simulate phosphor glow */
+.crt-pre-blur {
+  backdrop-filter: blur(var(--crt-pre-blur))
+}
+
+/* Adjust brightness of screen to preserve colours */
+.crt-post-brightness {
+  backdrop-filter: brightness(var(--crt-post-brightness));
+}
+
+/* Simulate visual artefact of interlacing jitter */
 /* Since this is painful to look at for long stretches of time,
    It is being used sparingly for specific content instead of
    the entire site. */
-.interlaced-content {
-  animation: interlacing 0.10s infinite;
-  -webkit-animation: interlacing 0.10s infinite;
+.crt-interlacing-jitter {
+  animation: crt-anim-interlacing-jitter 0.10s infinite;
 }
 
-@keyframes flicker {
+@keyframes crt-anim-flicker {
   0% {
     opacity: 0.27861;
   }
@@ -218,104 +311,9 @@ CRT effect taken from:
   }
 }
 
-@-webkit-keyframes flicker {
+@keyframes crt-anim-interlacing-jitter {
   0% {
-    opacity: 0.27861;
-  }
-
-  5% {
-    opacity: 0.34769;
-  }
-
-  10% {
-    opacity: 0.23604;
-  }
-
-  15% {
-    opacity: 0.90626;
-  }
-
-  20% {
-    opacity: 0.18128;
-  }
-
-  25% {
-    opacity: 0.83891;
-  }
-
-  30% {
-    opacity: 0.65583;
-  }
-
-  35% {
-    opacity: 0.67807;
-  }
-
-  40% {
-    opacity: 0.26559;
-  }
-
-  45% {
-    opacity: 0.84693;
-  }
-
-  50% {
-    opacity: 0.96019;
-  }
-
-  55% {
-    opacity: 0.08594;
-  }
-
-  60% {
-    opacity: 0.20313;
-  }
-
-  65% {
-    opacity: 0.71988;
-  }
-
-  70% {
-    opacity: 0.53455;
-  }
-
-  75% {
-    opacity: 0.37288;
-  }
-
-  80% {
-    opacity: 0.71428;
-  }
-
-  85% {
-    opacity: 0.70419;
-  }
-
-  90% {
-    opacity: 0.7003;
-  }
-
-  95% {
-    opacity: 0.36108;
-  }
-
-  100% {
-    opacity: 0.24387;
-  }
-}
-
-@keyframes interlacing {
-  0% {
-    transform: translateY(1px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
-}
-
-@-webkit-keyframes interlacing {
-  0% {
-    transform: translateY(1px);
+    transform: translateY(var(--crt-anim-jitter-diff));
   }
   100% {
     transform: translateY(0px);
