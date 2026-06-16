@@ -48,7 +48,6 @@ function applyJitter() {
 
             if (!child) break;
 
-            console.log(child);
             content.appendChild(child);
         }
 

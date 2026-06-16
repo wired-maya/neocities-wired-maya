@@ -24,38 +24,134 @@
   --crt-post-brightness: 1.5;
 }
 
+::selection {
+  background: var(--accent);
+  color: var(--accent-bright);
+}
+
+/* #region Caskaydia Cove Nerd Font Definition*/
+
+@font-face {
+  font-family: "Caskaydia Cove Nerd Font";
+  src: url(/assets/fonts/caskaydia-cove-nerd-font/CaskaydiaCoveNerdFont-ExtraLight.ttf);
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Caskaydia Cove Nerd Font";
+  src: url(/assets/fonts/caskaydia-cove-nerd-font/CaskaydiaCoveNerdFont-Light.ttf);
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Caskaydia Cove Nerd Font";
+  src: url(/assets/fonts/caskaydia-cove-nerd-font/CaskaydiaCoveNerdFont-SemiLight.ttf);
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Caskaydia Cove Nerd Font";
+  src: url(/assets/fonts/caskaydia-cove-nerd-font/CaskaydiaCoveNerdFont-Regular.ttf);
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Caskaydia Cove Nerd Font";
+  src: url(/assets/fonts/caskaydia-cove-nerd-font/CaskaydiaCoveNerdFont-SemiBold.ttf);
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Caskaydia Cove Nerd Font";
+  src: url(/assets/fonts/caskaydia-cove-nerd-font/CaskaydiaCoveNerdFont-Bold.ttf);
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Caskaydia Cove Nerd Font";
+  src: url(/assets/fonts/caskaydia-cove-nerd-font/CaskaydiaCoveNerdFont-ExtraLightItalic.ttf);
+  font-weight: 100;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Caskaydia Cove Nerd Font";
+  src: url(/assets/fonts/caskaydia-cove-nerd-font/CaskaydiaCoveNerdFont-LightItalic.ttf);
+  font-weight: 200;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Caskaydia Cove Nerd Font";
+  src: url(/assets/fonts/caskaydia-cove-nerd-font/CaskaydiaCoveNerdFont-SemiLightItalic.ttf);
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Caskaydia Cove Nerd Font";
+  src: url(/assets/fonts/caskaydia-cove-nerd-font/CaskaydiaCoveNerdFont-Italic.ttf);
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Caskaydia Cove Nerd Font";
+  src: url(/assets/fonts/caskaydia-cove-nerd-font/CaskaydiaCoveNerdFont-SemiBoldItalic.ttf);
+  font-weight: 600;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Caskaydia Cove Nerd Font";
+  src: url(/assets/fonts/caskaydia-cove-nerd-font/CaskaydiaCoveNerdFont-BoldItalic.ttf);
+  font-weight: 700;
+  font-style: italic;
+}
+
+/* #endregion */
+
+/* #region Tag Styling */
+
 body {
   background-color: var(--background);
   color: var(--primary);
-  font-family: 'Courier New', monospace;
+  font-family: 'Caskaydia Cove Nerd Font', monospace;
   text-align: center;
-}
-
-h1 {
-  font-size: 70px;
-}
-
-h2 {
-  font-size: 55px;
-}
-
-h3 {
-  font-size: 35px;
-}
-
-p {
-  font-size: 35px;
-}
-
-img {
-  display: block;
+  max-width: 1400px;
   margin-left: auto;
   margin-right: auto;
 }
 
-::selection {
-  background: var(--accent);
-  color: var(--accent-bright);
+h1 {
+  font-size: 70px;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+h2 {
+  font-size: 55px;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+h3 {
+  font-size: 35px;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+p {
+  font-size: 35px;
+  margin-left: 3em;
+  margin-right: 3em;
+  text-align: left;
 }
 
 a {
@@ -63,34 +159,24 @@ a {
   font-size: 35px;
 }
 
+/* #endregion */
+
+/* #region Utility Classes */
+
 .centre {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-p {
-  margin: auto;
-  max-width: 600px;
+.left-align {
+  margin-left: 1em;
+  margin-right: 1em;
   text-align: left;
 }
 
-.back-button {
-  position: absolute;
-  top: 4px;
-  left: 4px;
-}
-
-.button {
-  background-color: var(--background);
-  color: var(--primary);
-  border: none;
-  padding: 0;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  cursor: pointer;
+.left-indent {
+  padding-left: 2em;
 }
 
 /* Stretches implementing div over entire viewport so it acts as a filter */
@@ -111,6 +197,65 @@ p {
   z-index: 2;
 }
 
+/* #endregion */
+
+/* #region Component Styling */
+
+.page-logo {
+  max-width: 40vw;
+  min-width: 20vw;
+  width: 20em;
+}
+
+.background-skewed {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  padding: 5rem;
+}
+
+.background-skewed::before {
+  content: " ";
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  z-index: -1;
+  background-color: var(--background-bright);
+  transform: skew(-0.5rad);
+}
+
+.gallery-img {
+  width: 60%;
+  padding: 2rem;
+}
+
+/* Container for navigation links at the top */
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.button {
+  background-color: var(--background);
+  color: var(--primary);
+  border: none;
+  padding: 0;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  font-size: 35px;
+}
+
+/* #endregion */
+
+/* #region CRT Filter */
+
 /* Opacity of content burnt in to CRT */
 .crt-burnt-in {
   opacity: 0.02;
@@ -122,8 +267,6 @@ p {
   opacity: 0;
   animation: crt-anim-flicker 0.15s infinite;
 }
-
-/* TODO: Constants and variables */
 
 /*
   Uses phosphor wavelengths from real CRTs, specifically the set of P22 phosphors for colour CRT displays
@@ -319,3 +462,5 @@ p {
     transform: translateY(0px);
   }
 }
+
+/* #endregion */
