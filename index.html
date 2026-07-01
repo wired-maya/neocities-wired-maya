@@ -26,6 +26,8 @@
         <label>Flicker Intensity:<input id="crtOverlayFlicker" type="range" min="0" max="255" onchange="window.overlayUpdateField('crtFlickerColour', this.value)" /></label>
         <label>Pre Blur:<input id="crtOverlayPreBlur" type="number" step="0.1" min="0.0" onchange="window.overlayUpdateField('crtPreBlur', this.value)" /></label>
         <label>Post Brightness:<input id="crtOverlayPostBright" type="number" step="0.1" min="0.0" onchange="window.overlayUpdateField('crtPostBrightness', this.value)" /></label>
+
+        <button onclick="window.CrtOverlaySetDefault()">[RESET TO DEFAULT SETTINGS]</button>
       </fieldset>
     </form>
 

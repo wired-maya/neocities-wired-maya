@@ -47,7 +47,7 @@ export class CrtFocusType {
 }
 
 function initCrtDefaultSettings() {
-    storage.setItem("crtEnabled", "false"); // true, false
+    storage.setItem("crtEnabled", "true"); // true, false
     storage.setItem("crtFocusType", CrtFocusType.TRIAD_MASK);
 
     storage.setItem("crtAnimJitterDiff", "1"); // Any CSS size
@@ -214,15 +214,21 @@ function applyCrtStyle(settings) {
 }
 
 // Sets style properties to CSS and appends filters
-function applyCrtSettings() {
+export function applyCrtSettings() {
     let settings = fetchCrtOverlaySettings();
 
     applyCrtStyle(settings);
 
     if (settings.enabled === "true") {
         applyJitter();
+        removeCrtOverlay(); // Just in case
         appendCrtOverlay(settings.focusType);
     }
+}
+
+window.CrtOverlaySetDefault = function() {
+    storage.setItem("__is_crt_init__", "false");
+    applyCrtSettings();
 }
 
 // Finally, apply everything
