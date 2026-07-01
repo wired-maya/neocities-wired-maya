@@ -8,6 +8,10 @@
   --background: #1D0021;
   --background-bright: #3B0034;
 
+  /* Lengths */
+  --border-thickness: 2px;
+  --corner-radius: 64px;
+
   /* CRT colours */
   --crt-dark: #000000FF;
   --crt-transparent: #00000000;
@@ -20,13 +24,17 @@
   --crt-anim-jitter-diff: 1px;
 
   /* Other CRT properties */
-  --crt-pre-blur: 1.5px;
+  --crt-pre-blur: 1px;
   --crt-post-brightness: 1.5;
 }
 
 ::selection {
   background: var(--accent);
   color: var(--accent-bright);
+}
+
+* {
+  font-family: 'Caskaydia Cove Nerd Font', monospace;
 }
 
 /* #region Caskaydia Cove Nerd Font Definition*/
@@ -122,7 +130,6 @@
 body {
   background-color: var(--background);
   color: var(--primary);
-  font-family: 'Caskaydia Cove Nerd Font', monospace;
   text-align: center;
   max-width: 1400px;
   margin-left: auto;
@@ -131,20 +138,20 @@ body {
 
 h1 {
   font-size: 70px;
-  margin-left: 1rem;
-  margin-right: 1rem;
+  margin-left: 1em;
+  margin-right: 1em;
 }
 
 h2 {
   font-size: 55px;
-  margin-left: 1rem;
-  margin-right: 1rem;
+  margin-left: 1em;
+  margin-right: 1em;
 }
 
 h3 {
   font-size: 35px;
-  margin-left: 1rem;
-  margin-right: 1rem;
+  margin-left: 1em;
+  margin-right: 1em;
 }
 
 p {
@@ -155,13 +162,226 @@ p {
 }
 
 a {
-  color: var(--accent);
   font-size: 35px;
+  color: var(--accent);
+}
+
+form {
+  font-size: 16px;
+}
+
+fieldset {
+  display: grid;
+  /* grid-template-columns: 1fr 1fr; */
+  gap: 1em;
+
+  padding: 1.5em;
+  border: var(--border-thickness) solid var(--primary);
+  border-radius: var(--corner-radius);
+
+  font-size: 35px;
+
+  &:disabled {
+    border-color: var(--secondary);
+    color: var(--secondary);
+  }
+}
+
+/* For labels that have child inputs */
+label {
+  display: flex;
+  justify-content: space-between;
+}
+
+legend {
+  padding: 0.5em;
+  height: 1em;
+
+  border: var(--border-thickness) solid var(--primary);
+  border-radius: var(--corner-radius);
+
+  color: var(--primary);
+  background: var(--background);
+}
+
+input, select {
+  box-sizing: content-box;
+  font-size: inherit;
+
+  padding: 0.5em;
+  height: 1em;
+
+  border: var(--border-thickness) solid var(--primary);
+  border-radius: 2em;
+
+  background: var(--background);
+  color: var(--primary);
+
+  caret-color: var(--background);
+  caret-shape: block; /* Only works on Chrome, but still cool */
+
+  /* Remove any outline the browser gives */
+  outline: none;
+
+  &:disabled {
+    border-color: var(--secondary);
+    color: var(--secondary);
+  }
+
+  &:hover {
+    background-color: var(--background-bright);
+  }
+
+  &:focus {
+    background-color: var(--secondary);
+    border-color: var(--secondary);
+    color: var(--background);
+
+    font-weight: 900;
+  }
+}
+
+/* Disable unstylable spinner arrows */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Disable unstylable spinner arrows */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+input[type="range"] {
+  /* Remove browser specific stylings */
+  -webkit-appearance: none;
+  appearance: none;
+
+  /* Style the element that contains the range */
+  background: transparent;
+  cursor: pointer;
+
+  /* Style size */
+  margin: 0em;
+  width: 15em;
+  height: 1em;
+
+  &::-moz-range-track {
+    background: var(--background-bright);
+    border-radius: 1em;
+    height: 1em;
+  }
+
+  /* Selecting multiple elements doesn't work with nesting in Chrome */
+  &::-webkit-slider-runnable-track {
+    background: var(--background-bright);
+    border-radius: 1em;
+    height: 1em;
+  }
+
+  &::-moz-range-thumb {
+    background: var(--secondary);
+
+    border: none; /* Removes extra border that FF applies */
+    border-radius: 1em;
+
+    width: 1em;
+    height: 1em;
+
+    /* Set outline properties here to just change colour later */
+    outline: var(--border-thickness) solid transparent;
+    outline-offset: 0.5em;
+  }
+
+  &::-webkit-slider-thumb {
+    /* Remove browser specific decorations */
+    -webkit-appearance: none;
+    appearance: none;
+
+    background: var(--secondary);
+    border-radius: 1em;
+    width: 1em;
+    height: 1em;
+
+    outline: var(--border-thickness) solid transparent;
+    outline-offset: 0.5em;
+  }
+
+  &:hover {
+    &::-moz-range-thumb {
+      outline-color: var(--secondary);
+      background-color: var(--secondary);
+    }
+    
+    &::-webkit-slider-thumb {
+      outline-color: var(--secondary);
+      background-color: var(--secondary);
+    }
+  }
+
+  &:focus {
+    &::-moz-range-thumb {
+      outline-color: var(--primary);
+      background-color: var(--primary);
+    }
+
+    &::-webkit-slider-thumb {
+      outline-color: var(--primary);
+      background-color: var(--primary);
+    }
+  }
+}
+
+input[type="checkbox"] {
+  /* Remove browser specific decorations */
+  -webkit-appearance: none;
+  appearance: none;
+
+  /* Set base shape */
+  margin: 0em;
+  padding: 0em;
+  border: none;
+  border-radius: 1em;
+
+  /* Make checkbox size of one local character */
+  height: 1em;
+  width: 1em;
+
+  /* Background colour denotes checkbox state */
+  background: var(--background-bright);
+
+  /* Set outline properties here to just change colour later */
+  outline: var(--border-thickness) solid transparent;
+  outline-offset: 0.5em;
+
+  &:hover {
+    outline-color: var(--secondary);
+    background-color: var(--secondary);
+  }
+
+  &:checked {
+    outline-color: var(--primary);
+    background-color: var(--primary);
+  }
+}
+
+/* TODO: Can I organize this better? */
+label input[type="checkbox"] {
+  margin-left: 1em;
 }
 
 /* #endregion */
 
 /* #region Utility Classes */
+
+.legend-enabled {
+  border-color: var(--secondary);
+  color: var(--background);
+  background-color: var(--secondary);
+  font-weight: 900;
+}
 
 .centre {
   display: flex;
@@ -276,9 +496,9 @@ a {
     Wavelength to RGB converter, by an optics company: https://syronoptics.com/blogs/tools/wavelength-to-color-converter
     Idea: https://publish.obsidian.md/xybre/permalink/e397c38e-aa6f-45eb-831f-f02a3836abc4
 */
-.crt-dot-mask {
+.crt-triad-mask {
   /* Recreation of dot mask's phosphor layout */
-  background-size: 8px 4px;
+  background-size: 6px 3px;
   background-blend-mode: overlay;
   background-image:
     linear-gradient(
@@ -325,7 +545,7 @@ a {
   mix-blend-mode: multiply;
 }
 
-.crt-shadow-mask {
+.crt-slot-mask {
   /* Recreation of shadow mask's phosphor layout */
   background-size: 8px 4px;
   background-blend-mode: overlay;

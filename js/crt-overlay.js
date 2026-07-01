@@ -2,20 +2,117 @@ import { getStorageObject } from "./storage-utils.js"
 
 const storage = getStorageObject();
 
-function initCrtDefaultSettings() {
-    storage.setItem("crtEnabled", "true"); // true, false
-    storage.setItem("crtFilterType", "crt-dot-mask"); // crt-dot-mask, crt-shadow-mask
+// Data class
+export class CrtOverlaySettings {
+    static ENABLED = "crtEnabled";
+    static FOCUS_TYPE = "crtFocusType";
+    static ANIM_JITTER_DIFF = "crtAnimJitterDiff";
+    static FLICKER_COLOUR = "crtFlickerColour";
+    static PRE_BLUR = "crtPreBlur";
+    static POST_BRIGHTNESS = "crtPostBrightness";
 
-    storage.setItem("crtAnimJitterDiff", "1px"); // Any CSS size
+    constructor(
+        enabled,
+        focusType,
+
+        animJitterDiff,
+        flickerColour,
+        preBlur,
+        postBrightness
+    ) {
+        this.enabled = enabled;
+        this.focusType = focusType;
+
+        this.animJitterDiff = animJitterDiff;
+        this.flickerColour = flickerColour;
+        this.preBlur = preBlur;
+        this.postBrightness = postBrightness;
+    }
+
+    static getCSSPropName(key) {
+        switch (key) {
+            case(this.ANIM_JITTER_DIFF): return "--crt-anim-jitter-diff";
+            case(this.FLICKER_COLOUR): return "--crt-flicker-colour";
+            case(this.PRE_BLUR): return "--crt-pre-blur";
+            case(this.POST_BRIGHTNESS): return "--crt-post-brightness";
+        }
+    }
+}
+
+// Simulating an enum of available focus types, string matches css class
+export class CrtFocusType {
+    static TRIAD_MASK = "crt-triad-mask";
+    static SLOT_MASK = "crt-slot-mask";
+    static APERTURE_GRILLE = "crt-aperture-grille";
+}
+
+function initCrtDefaultSettings() {
+    storage.setItem("crtEnabled", "false"); // true, false
+    storage.setItem("crtFocusType", CrtFocusType.TRIAD_MASK);
+
+    storage.setItem("crtAnimJitterDiff", "1"); // Any CSS size
     storage.setItem("crtFlickerColour", "#12101033"); // Hex colour with alpha
-    storage.setItem("crtPreBlur", "1.5px"); // Any CSS size
+    storage.setItem("crtPreBlur", "1"); // Any CSS size
     storage.setItem("crtPostBrightness", "1.5"); // float
 
     storage.setItem("__is_crt_init__", "true");
 }
 
+export function fetchCrtOverlaySettings() {
+    // TODO: Use exceptions
+    if (!storage) return; // Returns null if storage fails
+    if (storage.getItem("__is_crt_init__") !== "true") initCrtDefaultSettings();
+    // initCrtDefaultSettings();
+
+    return new CrtOverlaySettings(
+        storage.getItem("crtEnabled"),
+        storage.getItem("crtFocusType"),
+
+        storage.getItem("crtAnimJitterDiff"),
+        storage.getItem("crtFlickerColour"),
+        storage.getItem("crtPreBlur"),
+        storage.getItem("crtPostBrightness")
+    )
+}
+
+export function setStorageItem(key, val) {
+    storage.setItem(key, val);
+
+    switch (key) {
+        case CrtOverlaySettings.ANIM_JITTER_DIFF:
+        case CrtOverlaySettings.FLICKER_COLOUR:
+        case CrtOverlaySettings.PRE_BLUR:
+        case CrtOverlaySettings.POST_BRIGHTNESS:
+            let root = document.querySelector(":root");
+            if (key === CrtOverlaySettings.ANIM_JITTER_DIFF || key === CrtOverlaySettings.PRE_BLUR) {
+                val += "px";
+            }
+            root.style.setProperty(CrtOverlaySettings.getCSSPropName(key), val);
+            break;
+        case CrtOverlaySettings.ENABLED:
+            let settings = fetchCrtOverlaySettings();
+            if (val === "true") {
+                applyJitter();
+                appendCrtOverlay(settings.focusType);
+            } else removeCrtOverlay();
+            break;
+        case CrtOverlaySettings.FOCUS_TYPE:
+            updateFocusType(val);
+            break;
+    }
+}
+
+function updateFocusType(type) {
+    let filter = document.getElementById("crtFilter");
+
+    if (filter) {
+        filter.className = "screen-filter";
+        filter.classList.add(type);
+    }
+}
+
 // Create and append overlays as divs, takes string for CRT filter class name
-function appendCrtOverlay(crtFilterType) {
+function appendCrtOverlay(crtFocusType) {
     // Create divs to be appended
     let divCrtPreBlur = document.createElement("div");
     let divCrtFilter = document.createElement("div");
@@ -24,12 +121,32 @@ function appendCrtOverlay(crtFilterType) {
 
     // Apply appropriate classes
     divCrtPreBlur.classList.add("screen-filter", "crt-pre-blur");
-    divCrtFilter.classList.add("screen-filter", crtFilterType);
+    divCrtFilter.classList.add("screen-filter", crtFocusType);
     divCrtPostBrightness.classList.add("screen-filter", "crt-post-brightness");
     divCrtFlicker.classList.add("screen-filter", "crt-flicker");
 
+    // IDs of course
+    divCrtPreBlur.id = "crtPreBlur";
+    divCrtFilter.id = "crtFilter";
+    divCrtPostBrightness.id = "crtPostBrightness";
+    divCrtFlicker.id = "crtFlicker";
+
     // Finally, append all children to bottom of body
     document.body.append(divCrtPreBlur, divCrtFilter, divCrtPostBrightness, divCrtFlicker);
+}
+
+function removeCrtOverlay() {
+    let divCrtPreBlur = document.getElementById("crtPreBlur");
+    let divCrtFilter = document.getElementById("crtFilter");
+    let divCrtPostBrightness = document.getElementById("crtPostBrightness");
+    let divCrtFlicker = document.getElementById("crtFlicker");
+
+    if (divCrtPreBlur) divCrtPreBlur.remove();
+    if (divCrtFilter) divCrtFilter.remove();
+    if (divCrtPostBrightness) divCrtPostBrightness.remove();
+    if (divCrtFlicker) divCrtFlicker.remove();
+
+    removeJitter();
 }
 
 // Applies Jitter to any <div> with the id "content"
@@ -57,41 +174,54 @@ function applyJitter() {
     content.classList.add("crt-interlacing-jitter");
 }
 
+function removeJitter() {
+    let content = document.getElementById("content");
+
+    if (content) {
+        while (true) {
+            let child = content.firstChild;
+
+            if (!child) break;
+
+            document.body.appendChild(child);
+        }
+
+        content.remove();
+    }
+}
+
 // Applies settings to HTML, does not init settings if they are not initialized
-function applyCrtStyle(storageObj) {
+function applyCrtStyle(settings) {
     let root = document.querySelector(":root");
 
     // Set CSS properties
     root.style.setProperty(
         "--crt-anim-jitter-diff",
-        storageObj.getItem("crtAnimJitterDiff")
+        settings.animJitterDiff + "px"
     );
     root.style.setProperty(
         "--crt-flicker-colour",
-        storageObj.getItem("crtFlickerColour")
+        settings.flickerColour
     );
     root.style.setProperty(
         "--crt-pre-blur",
-        storageObj.getItem("crtPreBlur")
+        settings.preBlur + "px"
     );
     root.style.setProperty(
         "--crt-post-brightness",
-        storageObj.getItem("crtPostBrightness")
+        settings.postBrightness
     );
 }
 
 // Sets style properties to CSS and appends filters
 function applyCrtSettings() {
-    if (!storage) return; // Does nothing if storage fails
-    if (storage.getItem("__is_crt_init__") !== "true") initCrtDefaultSettings();
+    let settings = fetchCrtOverlaySettings();
 
-    applyCrtStyle(storage);
+    applyCrtStyle(settings);
 
-    if (storage.getItem("crtEnabled") === "true") {
-        let filterType = storage.getItem("crtFilterType");
-
+    if (settings.enabled === "true") {
         applyJitter();
-        appendCrtOverlay(filterType);
+        appendCrtOverlay(settings.focusType);
     }
 }
 
