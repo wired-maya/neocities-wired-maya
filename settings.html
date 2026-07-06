@@ -9,6 +9,7 @@
     <link href="/styles/main.css" rel="stylesheet" type="text/css" media="all">
 
     <script src="/js/crt-overlay.js" type="module"></script>
+    <script src="/js/page-transition.js" type="module"></script>
     <script src="/js/settings.js" type="module"></script>
     <script src="/js/animations.js" type="module"></script>
   </head>
@@ -21,10 +22,14 @@
 
     <form onkeydown="return event.key != 'Enter';">
       <fieldset id="crtOverlayFieldset">
-        <legend id="crtOverlayLegend"><label>CRT Overlay<input type="checkbox" id="crtOverlayCheck" onclick="window.overlayCheckUpdateField();"/></label></legend>
+        <legend id="crtOverlayLegend">
+          <label>CRT Overlay
+            <input type="checkbox" id="crtOverlayCheck" onclick="window.crtOverlayCheckUpdateField();"/>
+          </label>
+        </legend>
         
         <div>
-          <label>Beam Focus Method:<select id="crtOverlayFocusSelect" onchange="window.overlayUpdateField('crtFocusType', this.value)">
+          <label>Beam Focus Method:<select id="crtOverlayFocusSelect" onchange="window.crtOverlayUpdateField('crtFocusType', this.value);">
             <option value="crt-slot-mask">Slot Shadow Mask</option>
             <option value="crt-triad-mask">Triad Shadow Mask</option>
             <option value="crt-aperture-grille">Aperture Grille</option>
@@ -40,7 +45,7 @@
         </div>
         <div>
           <label>Jitter Height:
-            <input id="crtOverlayJitter" type="number" step="0.1" min="0.0" onchange="window.overlayUpdateField('crtAnimJitterDiff', this.value)" />
+            <input id="crtOverlayJitter" type="number" step="0.1" min="0.0" onchange="window.crtOverlayUpdateField('crtAnimJitterDiff', this.value);" />
           </label>
           <p class="setting-description">
             The height the content is offset by. Simulates a video timing mismatch on a CRT. Pixels.
@@ -48,7 +53,7 @@
         </div>
         <div>
           <label>Flicker Intensity:
-            <input id="crtOverlayFlicker" type="range" min="0" max="255" onchange="window.overlayUpdateField('crtFlickerColour', this.value)" />
+            <input id="crtOverlayFlicker" type="range" min="0" max="255" onchange="window.crtOverlayUpdateField('crtFlickerColour', this.value);" />
           </label>
           <p class="setting-description">
             Controls the max opacity of the flicker overlay. 0 - 255.
@@ -56,7 +61,7 @@
         </div>
         <div>
           <label>Pre Blur:
-            <input id="crtOverlayPreBlur" type="number" step="0.1" min="0.0" onchange="window.overlayUpdateField('crtPreBlur', this.value)" />
+            <input id="crtOverlayPreBlur" type="number" step="0.1" min="0.0" onchange="window.crtOverlayUpdateField('crtPreBlur', this.value);" />
           </label>
           <p class="setting-description">
             The blur applied underneath the CRT overlay. Gives softer appearance. Pixels.
@@ -64,14 +69,33 @@
         </div>
         <div>
           <label>Post Brightness:
-            <input id="crtOverlayPostBright" type="number" step="0.1" min="0.0" onchange="window.overlayUpdateField('crtPostBrightness', this.value)" />
+            <input id="crtOverlayPostBright" type="number" step="0.1" min="0.0" onchange="window.crtOverlayUpdateField('crtPostBrightness', this.value);" />
           </label>
           <p class="setting-description">
             Brightness applied over the CRT overlay. Multiplier.
           </p>
         </div>
+        <button onclick="window.crtOverlaySetDefault()">[RESET TO DEFAULT SETTINGS]</button>
+      </fieldset>
 
-        <button onclick="window.CrtOverlaySetDefault()">[RESET TO DEFAULT SETTINGS]</button>
+      <fieldset id="pageTransitionFieldset">
+        <legend id="pageTransitionLegend">
+          <label>Page Transition
+            <input type="checkbox" id="pageTransitionCheck" onclick="window.pageTransitionCheckUpdateField();"/>
+          </label>
+        </legend>
+
+        <div>
+          <label>Jitter Height:
+            <input id="pageTransitionJitter" type="number" step="0.1" min="0.0" onchange="window.crtOverlayUpdateField('transitionAnimJitterDiff', this.value);" />
+          </label>
+          <p class="setting-description">
+            The height the content is offset by when loading a new page. Simulates a video timing mismatch on a CRT. Pixels.
+            <br><br>
+            Since this is related to the CRT filter, it is does nothing if the CRT filter isn't enabled.
+          </p>
+        </div>
+        <button onclick="window.pageTransitionSetDefault()">[RESET TO DEFAULT SETTINGS]</button>
       </fieldset>
     </form>
   </body>

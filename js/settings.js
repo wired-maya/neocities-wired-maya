@@ -1,6 +1,9 @@
-import { fetchCrtOverlaySettings, setStorageItem, CrtOverlaySettings } from "./crt-overlay.js"
+import { crtOverlayFetchSettings, crtOverlaySetStorageItem, CrtOverlaySettings } from "./crt-overlay.js"
+import { pageTransitionFetchSettings, pageTransitionSetStorageItem, PageTransitionSettings } from "./page-transition.js"
 
-function overlayCheckUpdateField(doStorageItem) {
+//===== CRT OVERLAY =====//
+
+function crtOverlayCheckUpdateField(doStorageItem) {
     let checkbox = document.getElementById("crtOverlayCheck");
     let fieldset = document.getElementById("crtOverlayFieldset");
     let legend = document.getElementById("crtOverlayLegend");
@@ -15,12 +18,12 @@ function overlayCheckUpdateField(doStorageItem) {
         if (checkbox.checked) string = "true";
         else string = "false";
 
-        setStorageItem(CrtOverlaySettings.ENABLED, string)
+        crtOverlaySetStorageItem(CrtOverlaySettings.ENABLED, string)
     }
 }
 
 // Populate settings page with the values in storage
-function overlayPopulateSettings() {
+function crtOverlayPopulateSettings() {
     let enabledCheckbox = document.getElementById("crtOverlayCheck");
     let focusSelect = document.getElementById("crtOverlayFocusSelect");
     let jitterNum = document.getElementById("crtOverlayJitter");
@@ -28,7 +31,7 @@ function overlayPopulateSettings() {
     let preBlurNum = document.getElementById("crtOverlayPreBlur");
     let postBrightNum = document.getElementById("crtOverlayPostBright");
 
-    let settings = fetchCrtOverlaySettings();
+    let settings = crtOverlayFetchSettings();
 
     // Apply settings!
     enabledCheckbox.checked = settings.enabled == "true";
@@ -43,15 +46,57 @@ function overlayPopulateSettings() {
     flickerNum.value = parseInt(flickerHex, 16);
 
     // Update visual properties based on settings
-    overlayCheckUpdateField(false);
+    crtOverlayCheckUpdateField(false);
 }
 
 // Expose to global scope
-window.overlayCheckUpdateField = function () { overlayCheckUpdateField(true); }
-window.overlayUpdateField = function(key, val) {
+window.crtOverlayCheckUpdateField = function () { crtOverlayCheckUpdateField(true); }
+window.crtOverlayUpdateField = function(key, val) {
     // Slider only updates alpha
     if (key == CrtOverlaySettings.FLICKER_COLOUR) val = "#121010" + parseInt(val).toString(16);
-    setStorageItem(key, val);
+    crtOverlaySetStorageItem(key, val);
 }
 
-overlayPopulateSettings();
+crtOverlayPopulateSettings();
+
+//===== PAGE TRANSITIONS =====//
+
+function pageTransitionCheckUpdateField(doStorageItem) {
+    let checkbox = document.getElementById("pageTransitionCheck");
+    let fieldset = document.getElementById("pageTransitionFieldset");
+    let legend = document.getElementById("pageTransitionLegend");
+
+    fieldset.disabled = !checkbox.checked;
+
+    legend.classList.toggle("legend-enabled", checkbox.checked);
+
+    if (doStorageItem) {
+        let string;
+
+        if (checkbox.checked) string = "true";
+        else string = "false";
+
+        pageTransitionSetStorageItem(PageTransitionSettings.ENABLED, string)
+    }
+}
+
+function pageTransitionPopulateSettings() {
+    let enabledCheckbox = document.getElementById("pageTransitionCheck");
+    let jitterNum = document.getElementById("pageTransitionJitter");
+
+    let settings = pageTransitionFetchSettings();
+
+    // Apply settings!
+    enabledCheckbox.checked = settings.enabled == "true";
+    jitterNum.value = settings.animJitterDiff;
+
+    // Update visual properties based on settings
+    pageTransitionCheckUpdateField(false);
+}
+
+window.pageTransitionCheckUpdateField = function () { pageTransitionCheckUpdateField(true); }
+window.pageTransitionUpdateField = function(key, val) {
+    pageTransitionSetStorageItem(key, val);
+}
+
+pageTransitionPopulateSettings();

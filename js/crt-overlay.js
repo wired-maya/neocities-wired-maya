@@ -1,6 +1,4 @@
-import { getStorageObject } from "./storage-utils.js"
-
-const storage = getStorageObject();
+import { storage } from "./storage-utils.js";
 
 // Data class
 export class CrtOverlaySettings {
@@ -40,15 +38,15 @@ export class CrtOverlaySettings {
 }
 
 // Simulating an enum of available focus types, string matches css class
-export class CrtFocusType {
+export class CrtOverlayFocusType {
     static TRIAD_MASK = "crt-triad-mask";
     static SLOT_MASK = "crt-slot-mask";
     static APERTURE_GRILLE = "crt-aperture-grille";
 }
 
-function initCrtDefaultSettings() {
+function crtOverlayInitDefaultSettings() {
     storage.setItem("crtEnabled", "true"); // true, false
-    storage.setItem("crtFocusType", CrtFocusType.TRIAD_MASK);
+    storage.setItem("crtFocusType", CrtOverlayFocusType.TRIAD_MASK);
 
     storage.setItem("crtAnimJitterDiff", "0"); // Any CSS size
     storage.setItem("crtFlickerColour", "#12101000"); // Hex colour with alpha
@@ -58,10 +56,9 @@ function initCrtDefaultSettings() {
     storage.setItem("__is_crt_init__", "true");
 }
 
-export function fetchCrtOverlaySettings() {
+export function crtOverlayFetchSettings() {
     if (!storage) return; // Returns null if storage fails
-    if (storage.getItem("__is_crt_init__") !== "true") initCrtDefaultSettings();
-    // initCrtDefaultSettings();
+    if (storage.getItem("__is_crt_init__") !== "true") crtOverlayInitDefaultSettings();
 
     return new CrtOverlaySettings(
         storage.getItem("crtEnabled"),
@@ -74,7 +71,7 @@ export function fetchCrtOverlaySettings() {
     )
 }
 
-export function setStorageItem(key, val) {
+export function crtOverlaySetStorageItem(key, val) {
     storage.setItem(key, val);
 
     switch (key) {
@@ -89,7 +86,7 @@ export function setStorageItem(key, val) {
             root.style.setProperty(CrtOverlaySettings.getCSSPropName(key), val);
             break;
         case CrtOverlaySettings.ENABLED:
-            let settings = fetchCrtOverlaySettings();
+            let settings = crtOverlayFetchSettings();
             if (val === "true") {
                 applyJitter();
                 appendCrtOverlay(settings.focusType);
@@ -214,8 +211,8 @@ function applyCrtStyle(settings) {
 }
 
 // Sets style properties to CSS and appends filters
-export function applyCrtSettings() {
-    let settings = fetchCrtOverlaySettings();
+export function crtOverlayApplySettings() {
+    let settings = crtOverlayFetchSettings();
 
     applyCrtStyle(settings);
 
@@ -226,10 +223,10 @@ export function applyCrtSettings() {
     }
 }
 
-window.CrtOverlaySetDefault = function() {
+window.crtOverlaySetDefault = function() {
     storage.setItem("__is_crt_init__", "false");
-    applyCrtSettings();
+    crtOverlayApplySettings();
 }
 
 // Finally, apply everything
-applyCrtSettings();
+crtOverlayApplySettings();

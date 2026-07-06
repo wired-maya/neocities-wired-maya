@@ -22,9 +22,12 @@ function isStorageAvailable(type) {
 }
 
 // Returns localStorage if available, otherwise sessionStore, or null if neither are available
-export function getStorageObject() {
+function getStorageObject() {
     if (isStorageAvailable("localStorage")) return window.localStorage;
     if (isStorageAvailable("sessionStorage")) return window.sessionStorage;
 
     return null;
 }
+
+// Export here so you don't fetch the object multiple times
+export const storage = getStorageObject();
