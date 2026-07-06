@@ -12,6 +12,12 @@
   --border-thickness: 2px;
   --corner-radius: 64px;
 
+  /* Font sizes */
+  --font-large: 70px;
+  --font-medium: 55px;
+  --font-small: 35px;
+  --font-very-small: 28px;
+
   /* CRT colours */
   --crt-dark: #000000FF;
   --crt-transparent: #00000000;
@@ -22,10 +28,19 @@
 
   /* CRT anim properties */
   --crt-anim-jitter-diff: 1px;
+  --crt-anim-jitter-diff-page-load: 75px;
 
   /* Other CRT properties */
   --crt-pre-blur: 1px;
   --crt-post-brightness: 1.5;
+
+  /* Timing */
+  --transition-duration: 150ms;
+  --transition-decay-duration: 750ms;
+}
+
+html {
+  background-color: var(--background);
 }
 
 ::selection {
@@ -35,6 +50,24 @@
 
 * {
   font-family: 'Caskaydia Cove Nerd Font', monospace;
+
+  /* Transition followed when exiting hover */
+  transition-property: color, background-color, border-color, outline-color, width;
+  transition-duration: var(--transition-decay-duration);
+  transition-timing-function: ease-out;
+
+  &:hover {
+    /* Transition followed when entering hover */
+    transition-duration: var(--transition-duration);
+  }
+
+  &:active {
+    transition-duration: var(--transition-duration);
+  }
+
+  &:disabled {
+    transition-duration: var(--transition-duration);
+  }
 }
 
 /* #region Caskaydia Cove Nerd Font Definition*/
@@ -125,59 +158,110 @@
 
 /* #endregion */
 
+/* #region Property Definitions */
+
+@property --jitter-diff {
+  syntax: "<length> | <percentage>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+/* #endregion */
+
 /* #region Tag Styling */
 
 body {
+  max-width: min(100vw, 1400px);
+  margin: 0 auto 0 auto;
+  overflow-x: hidden;
+
+  text-align: center;
+
   background-color: var(--background);
   color: var(--primary);
-  text-align: center;
-  max-width: 1400px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 h1 {
-  font-size: 70px;
+  font-size: var(--font-large);
   margin-left: 1em;
   margin-right: 1em;
 }
 
 h2 {
-  font-size: 55px;
+  font-size: var(--font-medium);
   margin-left: 1em;
   margin-right: 1em;
 }
 
 h3 {
-  font-size: 35px;
+  font-size: var(--font-small);
   margin-left: 1em;
   margin-right: 1em;
 }
 
 p {
-  font-size: 35px;
+  font-size: var(--font-small);
   margin-left: 3em;
   margin-right: 3em;
   text-align: left;
 }
 
 a {
-  font-size: 35px;
-  color: var(--accent);
-}
+  position: relative;
+  border-radius: 2em;
 
-form {
-  font-size: 16px;
+  transition-delay: 250ms;
+
+  color: var(--primary);
+  
+  &::before {
+    content: "";
+
+    position: absolute;
+    width: calc(100% + 1em);
+    height: 2em;
+    top: -0.5em;
+    left: -0.5em;
+    border-radius: 2em;
+    z-index: -1;
+
+    transition-property: background-color;
+    transition-duration: var(--transition-decay-duration);
+    transition-timing-function: ease-out;
+    transition-delay: 250ms;
+
+    background-color: transparent;
+  }
+
+  &::after {
+    content: "";
+
+    position: fixed;
+    height: 2em;
+    left: calc(50% - 50vw);
+    transform: translateY(-0.5em);
+    border-radius: 2em;
+
+    background-color: var(--background-bright);
+  }
+
+  &:hover {
+    color: var(--background);
+  }
+
+  &:hover::before {
+    transition-duration: var(--transition-duration);
+    background-color: var(--secondary);
+  }
 }
 
 fieldset {
-  font-size: 35px;
+  font-size: var(--font-small);
 
   display: grid;
-  /* grid-template-columns: 1fr 1fr; */
-  gap: 1em;
-
+  gap: 2em;
   padding: 1.5em;
+  
   border: var(--border-thickness) solid var(--primary);
   border-radius: var(--corner-radius);
 
@@ -187,12 +271,6 @@ fieldset {
   }
 }
 
-/* For labels that have child inputs */
-label {
-  display: flex;
-  justify-content: space-between;
-}
-
 legend {
   padding: 0.5em;
   height: 1em;
@@ -200,40 +278,54 @@ legend {
   border: var(--border-thickness) solid var(--primary);
   border-radius: var(--corner-radius);
 
-  color: var(--primary);
   background: var(--background);
+  color: var(--primary);
+}
+
+/* For labels that have child inputs */
+label {
+  display: flex;
+  justify-content: space-between;
+  height: 1em;
+  text-align: start;
+
+  /* Aligns label with bottom of the flex, making it look better with the descriptions */
+  align-items: end;
 }
 
 button {
   font-size: inherit;
   box-sizing: content-box;
-
-  padding: 0.5em;
   height: 1em;
+  padding: 0.5em;
 
   border: var(--border-thickness) solid var(--primary);
   border-radius: var(--corner-radius);
 
-  color: var(--primary);
   background: var(--background);
+  color: var(--primary);
 
   &:hover {
     background-color: var(--background-bright);
   }
 
   &:active {
-    border-color: var(--secondary);
     background-color: var(--secondary);
+    border-color: var(--secondary);
     color: var(--background);
+  }
+
+  &:disabled {
+    border-color: var(--secondary);
+    color: var(--secondary);
   }
 }
 
 input, select {
-  box-sizing: content-box;
   font-size: inherit;
-
-  padding: 0.5em;
+  box-sizing: content-box;
   height: 1em;
+  padding: 0.5em;
 
   border: var(--border-thickness) solid var(--primary);
   border-radius: 2em;
@@ -257,11 +349,11 @@ input, select {
   }
 
   &:focus {
+    font-weight: 900;
+    
     background-color: var(--secondary);
     border-color: var(--secondary);
     color: var(--background);
-
-    font-weight: 900;
   }
 }
 
@@ -279,99 +371,102 @@ input[type="number"] {
 }
 
 input[type="range"] {
+  width: 12em;
+  height: 1em;
+  margin: 0em;
+
   /* Remove browser specific stylings */
   -webkit-appearance: none;
   appearance: none;
 
   /* Style the element that contains the range */
-  background: transparent;
-  cursor: pointer;
-
-  /* Style size */
-  margin: 0em;
-  width: 15em;
-  height: 1em;
+  background: var(--background);
+  cursor: pointer;  
 
   &::-moz-range-track {
-    background: var(--background-bright);
-    border-radius: 1em;
     height: 1em;
+    border-radius: 1em;
+    
+    background: var(--background-bright);
   }
 
   /* Selecting multiple elements doesn't work with nesting in Chrome */
   &::-webkit-slider-runnable-track {
-    background: var(--background-bright);
-    border-radius: 1em;
     height: 1em;
+    border-radius: 1em;
+    
+    background: var(--background-bright);
   }
 
   &::-moz-range-thumb {
-    background: var(--secondary);
+    width: 1em;
+    height: 1em;
+    
 
     border: none; /* Removes extra border that FF applies */
     border-radius: 1em;
 
-    width: 1em;
-    height: 1em;
-
     /* Set outline properties here to just change colour later */
     outline: var(--border-thickness) solid transparent;
     outline-offset: 0.5em;
+
+    background: var(--secondary);
   }
 
   &::-webkit-slider-thumb {
+    width: 1em;
+    height: 1em;
+
     /* Remove browser specific decorations */
     -webkit-appearance: none;
     appearance: none;
 
-    background: var(--secondary);
     border-radius: 1em;
-    width: 1em;
-    height: 1em;
 
     outline: var(--border-thickness) solid transparent;
     outline-offset: 0.5em;
+
+    background: var(--secondary);
   }
 
   &:hover {
     &::-moz-range-thumb {
-      outline-color: var(--secondary);
       background-color: var(--secondary);
+      outline-color: var(--secondary);
     }
     
     &::-webkit-slider-thumb {
-      outline-color: var(--secondary);
       background-color: var(--secondary);
+      outline-color: var(--secondary);
     }
   }
 
   &:focus {
     &::-moz-range-thumb {
-      outline-color: var(--primary);
       background-color: var(--primary);
+      outline-color: var(--primary);
     }
 
     &::-webkit-slider-thumb {
-      outline-color: var(--primary);
       background-color: var(--primary);
+      outline-color: var(--primary);
     }
   }
 }
 
 input[type="checkbox"] {
+  height: 1em;
+  width: 1em;
+  margin: 0em;
+  padding: 0em;
+
   /* Remove browser specific decorations */
   -webkit-appearance: none;
   appearance: none;
 
   /* Set base shape */
-  margin: 0em;
-  padding: 0em;
   border: none;
   border-radius: 1em;
-
-  /* Make checkbox size of one local character */
-  height: 1em;
-  width: 1em;
 
   /* Background colour denotes checkbox state */
   background: var(--background-bright);
@@ -381,17 +476,17 @@ input[type="checkbox"] {
   outline-offset: 0.5em;
 
   &:hover {
-    outline-color: var(--secondary);
     background-color: var(--secondary);
+    outline-color: var(--secondary);
   }
 
   &:checked {
-    outline-color: var(--primary);
-    background-color: var(--primary);
+    background-color: var(--background);
+    outline-color: var(--background);
   }
 }
 
-/* TODO: Can I organize this better? */
+/* Labels need padding too you know! */
 label input[type="checkbox"] {
   margin-left: 1em;
 }
@@ -399,13 +494,6 @@ label input[type="checkbox"] {
 /* #endregion */
 
 /* #region Utility Classes */
-
-.legend-enabled {
-  border-color: var(--secondary);
-  color: var(--background);
-  background-color: var(--secondary);
-  font-weight: 900;
-}
 
 .centre {
   display: flex;
@@ -438,7 +526,7 @@ label input[type="checkbox"] {
   height: 100vh;
 
   pointer-events: none;
-  z-index: 2;
+  z-index: 10;
 }
 
 /* #endregion */
@@ -446,54 +534,160 @@ label input[type="checkbox"] {
 /* #region Component Styling */
 
 .page-logo {
-  max-width: 40vw;
   min-width: 20vw;
   width: 20em;
+  max-width: 40vw;
 }
 
 .background-skewed {
   position: relative;
-  z-index: 1;
   display: inline-block;
-  padding: 5rem;
-}
+  
+  padding: 5em;
 
-.background-skewed::before {
-  content: " ";
-  height: 100%;
-  width: 100%;
-  top: 0;
-  left: 0;
-  position: absolute;
-  z-index: -1;
-  background-color: var(--background-bright);
-  transform: skew(-0.5rad);
+  &::before {
+    content: " ";
+
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    transform: skew(-0.5rad);
+
+    background-color: var(--background-bright);
+  }
 }
 
 .gallery-img {
   width: 60%;
-  padding: 2rem;
+  padding: 2em;
 }
 
 /* Container for navigation links at the top */
 .nav-container {
+  font-size: 35px;
+  
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 2rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  justify-content: left;
+  margin-bottom: 2em;
+  z-index: -1;
+
+  white-space: nowrap;
+}
+
+.nav-left, .nav-middle, .nav-right {
+  /* Make these links unique */
+  all: unset;
+
+  margin-left: -2em;
+  padding: 0.5em 1em;
+  padding-left: 3em;
+
+  transition: padding 250ms ease-in-out;
+
+  &::before {
+    all: unset;
+    
+  }
+  &::after {
+    all: unset;
+  }
+
+  &:hover {
+    padding-right: 7em;
+    cursor: pointer;
+  }
+}
+
+.nav-left {
+  /* All corners have radius so when the max width of the body is reached,
+     it still has a pleasing appearance */
+  border-radius: 2em;
+  z-index: 2;
+  
+  background-color: var(--primary);
+  color: var(--background);
+}
+
+.nav-middle {
+  z-index: 1;
+
+  border-bottom-right-radius: 2em;
+  border-top-right-radius: 2em;
+
+  background-color: var(--secondary);
+  color: var(--background);
+}
+
+.nav-right {
+  z-index: 0;
+  
+  background-color: var(--background-bright);
+  border-bottom-right-radius: 2em;
+  border-top-right-radius: 2em;
+
+  &:hover {
+    color: var(--primary);
+  }
+}
+
+.legend-enabled {
+  background-color: var(--secondary);
+  border-color: var(--secondary);
+  color: var(--background);
+
+  font-weight: 900;
+}
+
+.setting-description {
+  font-size: var(--font-very-small);
+  text-wrap: balance;
+
+  margin: 0.5em 2em 0 2em;
+
+  color: var(--secondary);
 }
 
 .button {
-  background-color: var(--background);
-  color: var(--primary);
-  border: none;
-  padding: 0;
+  font-size: var(--font-small);
+  display: inline-block;
+  
   text-align: center;
   text-decoration: none;
-  display: inline-block;
+
+  padding: 0;
+  border: none;
+
+  background-color: var(--background);
+  color: var(--primary);
+  
   cursor: pointer;
-  font-size: 35px;
+}
+
+/* #endregion */
+
+/* #region Element Animations */
+
+/* Add class to the element programmatically to start animation */
+.animate-width-scrub::after {
+  animation: width-scrub-anim-after 500ms ease-in-out;
+}
+
+@keyframes width-scrub-anim-after {
+  0% {
+    width: 0;
+    left: calc(50% - 50vw);
+  }
+  50% {
+    width: 100vw;
+    left: calc(50% - 50vw);
+  }
+  100% {
+    width: 0;
+    left: calc(50% + 50vw);
+  }
 }
 
 /* #endregion */
@@ -507,8 +701,9 @@ label input[type="checkbox"] {
 
 /* Flicker */
 .crt-flicker {
-  background: var(--crt-flicker-colour);
   opacity: 0;
+  background: var(--crt-flicker-colour);
+  
   animation: crt-anim-flicker 0.15s infinite;
 }
 
@@ -609,7 +804,10 @@ label input[type="checkbox"] {
    It is being used sparingly for specific content instead of
    the entire site. */
 .crt-interlacing-jitter {
-  animation: crt-anim-interlacing-jitter 0.10s infinite;
+  --jitter-diff: var(--crt-anim-jitter-diff);
+  
+  animation: crt-anim-jitter-diff-anim 250ms ease-out, crt-anim-interlacing-jitter 100ms infinite;
+  animation-composition: add;
 }
 
 @keyframes crt-anim-flicker {
@@ -698,9 +896,45 @@ label input[type="checkbox"] {
   }
 }
 
+@keyframes crt-anim-jitter-diff-anim {
+  0% {
+    transform: translateY(var(--crt-anim-jitter-diff-page-load));
+  }
+  5% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * -0.9));
+  }
+  10% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * 0.8));
+  }
+  15% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * -0.7));
+  }
+  25% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * 0.6));
+  }
+  35% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * -0.5));
+  }
+  45% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * 0.4));
+  }
+  55% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * -0.3));
+  }
+  70% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * 0.2));
+  }
+  85% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * -0.1));
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
 @keyframes crt-anim-interlacing-jitter {
   0% {
-    transform: translateY(var(--crt-anim-jitter-diff));
+    transform: translateY(var(--jitter-diff));
   }
   100% {
     transform: translateY(0px);

@@ -50,16 +50,15 @@ function initCrtDefaultSettings() {
     storage.setItem("crtEnabled", "true"); // true, false
     storage.setItem("crtFocusType", CrtFocusType.TRIAD_MASK);
 
-    storage.setItem("crtAnimJitterDiff", "1"); // Any CSS size
-    storage.setItem("crtFlickerColour", "#12101033"); // Hex colour with alpha
+    storage.setItem("crtAnimJitterDiff", "0"); // Any CSS size
+    storage.setItem("crtFlickerColour", "#12101000"); // Hex colour with alpha
     storage.setItem("crtPreBlur", "1"); // Any CSS size
-    storage.setItem("crtPostBrightness", "1.5"); // float
+    storage.setItem("crtPostBrightness", "2.5"); // float
 
     storage.setItem("__is_crt_init__", "true");
 }
 
 export function fetchCrtOverlaySettings() {
-    // TODO: Use exceptions
     if (!storage) return; // Returns null if storage fails
     if (storage.getItem("__is_crt_init__") !== "true") initCrtDefaultSettings();
     // initCrtDefaultSettings();
@@ -135,7 +134,7 @@ function appendCrtOverlay(crtFocusType) {
     document.body.append(divCrtPreBlur, divCrtFilter, divCrtPostBrightness, divCrtFlicker);
 }
 
-function removeCrtOverlay() {
+function removeCrtOverlay(removeJitter) {
     let divCrtPreBlur = document.getElementById("crtPreBlur");
     let divCrtFilter = document.getElementById("crtFilter");
     let divCrtPostBrightness = document.getElementById("crtPostBrightness");
@@ -146,12 +145,13 @@ function removeCrtOverlay() {
     if (divCrtPostBrightness) divCrtPostBrightness.remove();
     if (divCrtFlicker) divCrtFlicker.remove();
 
-    removeJitter();
+    if (removeJitter) removeJitter();
 }
 
 // Applies Jitter to any <div> with the id "content"
 // If content is not present, move all children of <body> into a new content div
 // All future appended nodes must be put into the content <div>
+// TODO: Consider just making it default to put in a div
 function applyJitter() {
     let content = document.getElementById("content");
 
@@ -167,7 +167,7 @@ function applyJitter() {
 
             content.appendChild(child);
         }
-
+        
         document.body.appendChild(content);
     }
 
@@ -221,7 +221,7 @@ export function applyCrtSettings() {
 
     if (settings.enabled === "true") {
         applyJitter();
-        removeCrtOverlay(); // Just in case
+        removeCrtOverlay(false); // Just in case
         appendCrtOverlay(settings.focusType);
     }
 }

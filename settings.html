@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wired_maya's Home</title>
+    <link rel="icon" href="/assets/logos/cat eye.svg" type="image/svg+xml">
+
+    <link href="/styles/main.css" rel="stylesheet" type="text/css" media="all">
+
+    <script src="/js/crt-overlay.js" type="module"></script>
+    <script src="/js/settings.js" type="module"></script>
+    <script src="/js/animations.js" type="module"></script>
+  </head>
+  <body>
+    <div class="nav-container">
+      <a class="nav-left" href="/index.html">* [return home]</a>
+      <a class="nav-middle" href="/settings.html">% [settings]</a>
+      <a class="nav-right" href="../">^ [go up]</a>
+    </div>
+
+    <form onkeydown="return event.key != 'Enter';">
+      <fieldset id="crtOverlayFieldset">
+        <legend id="crtOverlayLegend"><label>CRT Overlay<input type="checkbox" id="crtOverlayCheck" onclick="window.overlayCheckUpdateField();"/></label></legend>
+        
+        <div>
+          <label>Beam Focus Method:<select id="crtOverlayFocusSelect" onchange="window.overlayUpdateField('crtFocusType', this.value)">
+            <option value="crt-slot-mask">Slot Shadow Mask</option>
+            <option value="crt-triad-mask">Triad Shadow Mask</option>
+            <option value="crt-aperture-grille">Aperture Grille</option>
+          </select></label>
+          <p class="setting-description">
+            Select from the three major focus methods! So many choices!
+            <br><br>
+            In a CRT, this is a metal plate in behind the phosphors on the screen. CRTs have three separate
+            electron guns for lighting the phosphors, one for red, green, and blue respectively.
+            Due to the difference in position of each gun, the electrons go through the holes at
+            different angles, ensuring the correct electron beam hits the correct phosphor.
+          </p>
+        </div>
+        <div>
+          <label>Jitter Height:
+            <input id="crtOverlayJitter" type="number" step="0.1" min="0.0" onchange="window.overlayUpdateField('crtAnimJitterDiff', this.value)" />
+          </label>
+          <p class="setting-description">
+            The height the content is offset by. Simulates a video timing mismatch on a CRT. Pixels.
+          </p>
+        </div>
+        <div>
+          <label>Flicker Intensity:
+            <input id="crtOverlayFlicker" type="range" min="0" max="255" onchange="window.overlayUpdateField('crtFlickerColour', this.value)" />
+          </label>
+          <p class="setting-description">
+            Controls the max opacity of the flicker overlay. 0 - 255.
+          </p>
+        </div>
+        <div>
+          <label>Pre Blur:
+            <input id="crtOverlayPreBlur" type="number" step="0.1" min="0.0" onchange="window.overlayUpdateField('crtPreBlur', this.value)" />
+          </label>
+          <p class="setting-description">
+            The blur applied underneath the CRT overlay. Gives softer appearance. Pixels.
+          </p>
+        </div>
+        <div>
+          <label>Post Brightness:
+            <input id="crtOverlayPostBright" type="number" step="0.1" min="0.0" onchange="window.overlayUpdateField('crtPostBrightness', this.value)" />
+          </label>
+          <p class="setting-description">
+            Brightness applied over the CRT overlay. Multiplier.
+          </p>
+        </div>
+
+        <button onclick="window.CrtOverlaySetDefault()">[RESET TO DEFAULT SETTINGS]</button>
+      </fieldset>
+    </form>
+  </body>
+</html>
