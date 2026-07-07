@@ -19,12 +19,16 @@
             <a class="nav-right" href="./">^ [go up]</a>
         </div>
         
-        <h1>My cat! :D</h1>
-        <h3>Rest in Peace, Piper <3</h3>
-        <button class="button" onclick="scrollGallery(-1);">&lt;</button>
-        <h3 id="gallerySlider" style="display: inline; user-select: none;"></h3>
-        <button class="button" onclick="scrollGallery(1);">&gt;</button><br>
-        <img id="galleryImg" class="gallery-img">
+        <div class="gallery-card">
+            <h1>My cat! :D</h1>
+            <h3>Rest in Peace, Piper <3</h3>
+            <input id="gallerySlider" class="gallery-slider" type="range" min="0" max="10" onchange="setGallery(this.value)" />
+            <div class="gallery-img-container">
+                <button class="gallery-arrow-left" onclick="scrollGallery(-1)"><</button>
+                <img id="galleryImg" class="gallery-img">
+                <button class="gallery-arrow-right" onclick="scrollGallery(1)">></button>
+            </div>
+        </div>
 
         <script>
             var i = 0;
@@ -45,15 +49,21 @@
             var slider = document.getElementById("gallerySlider");
 
             // Init state
-            scrollGallery(0);
+            setGallery(i);
 
             function scrollGallery(offset) {
                 i += offset;
                 if (i >= images.length) i = 0;
                 if (i <= -1) i = images.length - 1;
 
+                setGallery(i);
+            }
+
+            function setGallery(pos) {
+                i = parseInt(pos);
+
+                slider.value = i;
                 img.src = "/assets/gallery/my-cat/" + images[i];
-                slider.innerHTML = "-".repeat(i) + "|" + "-".repeat(images.length - 1 - i);
             }
         </script>
     </body>

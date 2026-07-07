@@ -152,39 +152,13 @@ function removeCrtOverlay(removeJitter) {
 function applyJitter() {
     let content = document.getElementById("content");
 
-    if (!content) {
-        content = document.createElement("div");
-        content.id = "content";
-
-        // Loop over each child and reparent them
-        while (true) {
-            let child = document.body.firstChild;
-
-            if (!child) break;
-
-            content.appendChild(child);
-        }
-        
-        document.body.appendChild(content);
-    }
-
     content.classList.add("crt-interlacing-jitter");
 }
 
 function removeJitter() {
     let content = document.getElementById("content");
 
-    if (content) {
-        while (true) {
-            let child = content.firstChild;
-
-            if (!child) break;
-
-            document.body.appendChild(child);
-        }
-
-        content.remove();
-    }
+    content.classList.remove("crt-interlacing-jitter");
 }
 
 // Applies settings to HTML, does not init settings if they are not initialized
@@ -213,6 +187,24 @@ function applyCrtStyle(settings) {
 // Sets style properties to CSS and appends filters
 export function crtOverlayApplySettings() {
     let settings = crtOverlayFetchSettings();
+    let content = document.getElementById("content");
+
+    // Making sure there is a content wrapper here makes everything easier
+    if (!content) {
+        content = document.createElement("div");
+        content.id = "content";
+
+        // Loop over each child and reparent them
+        while (true) {
+            let child = document.body.firstChild;
+
+            if (!child) break;
+
+            content.appendChild(child);
+        }
+        
+        document.body.appendChild(content);
+    }
 
     applyCrtStyle(settings);
 

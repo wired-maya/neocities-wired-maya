@@ -41,6 +41,7 @@
 
 html {
   background-color: var(--background);
+  color: var(--primary);
 }
 
 ::selection {
@@ -172,13 +173,9 @@ html {
 
 body {
   max-width: min(100vw, 1400px);
-  margin: 0 auto 0 auto;
+  margin: 0 auto;
   overflow-x: hidden;
-
   text-align: center;
-
-  background-color: var(--background);
-  color: var(--primary);
 }
 
 h1 {
@@ -238,9 +235,9 @@ a {
 
     position: fixed;
     height: 2em;
-    left: calc(50% - 50vw);
     transform: translateY(-0.5em);
     border-radius: 2em;
+    z-index: 1;
 
     background-color: var(--background-bright);
   }
@@ -305,6 +302,8 @@ button {
 
   border: var(--border-thickness) solid var(--primary);
   border-radius: var(--corner-radius);
+
+  cursor: pointer;
 
   background: var(--background);
   color: var(--primary);
@@ -518,7 +517,6 @@ label input[type="checkbox"] {
 /* Stretches implementing div over entire viewport so it acts as a filter */
 .screen-filter {
   content: " ";
-  display: block;
   position: fixed;
 
   top: 0;
@@ -537,6 +535,10 @@ label input[type="checkbox"] {
 
 /* #region Component Styling */
 
+#content {
+  contain: layout;
+}
+
 .page-logo {
   min-width: 20vw;
   width: 20em;
@@ -547,11 +549,11 @@ label input[type="checkbox"] {
   position: relative;
   display: inline-block;
   
-  margin-top: 6em;
-  margin-bottom: 6em;
+  margin-top: 15vh;
+  margin-bottom: 15vh;
 
   &::before {
-    content: " ";
+    content: "";
 
     position: absolute;
     width: 130%;
@@ -566,9 +568,85 @@ label input[type="checkbox"] {
   }
 }
 
+.gallery-slider[type="range"] {
+  width: calc(100% + 3em);
+}
+
 .gallery-img {
-  width: 60%;
-  padding: 2em;
+  width: 75%;
+  border-radius: var(--corner-radius);
+}
+
+.gallery-img-container {
+  position: relative;
+  display: inline-block;
+  margin: 1em auto;
+  z-index: -1;
+}
+
+.gallery-arrow-left, .gallery-arrow-right {
+  font-size: var(--font-large);
+  position: absolute;
+  border-radius: 4em;
+  z-index: -1;
+
+  transition-property: left, right, background-color, border-color, color;
+  transition-duration: var(--transition-duration);
+
+  cursor: pointer;
+
+  background-color: var(--secondary);
+  border-color: var(--secondary);
+  color: var(--background);
+
+  &:hover {
+    background-color: var(--secondary);
+    border-color: var(--secondary);
+    color: var(--background);
+  }
+
+  &:active {
+    background-color: var(--background);
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+}
+
+.gallery-arrow-left {
+  top: 25%;
+  left: 0em;
+  padding-right: 40%;
+
+  &:hover {
+    left: -1em;
+  }
+}
+
+.gallery-arrow-right {
+  bottom: 25%;
+  right: 0em;
+  padding-left: 40%;
+
+  &:hover {
+    right: -1em;
+  }
+}
+
+.gallery-card {
+  font-size: var(--font-small);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1em 3em;
+  padding: 1em;
+  z-index: -2;
+
+  border: var(--border-thickness) solid var(--primary);
+  border-radius: var(--corner-radius);
+
+  background-color: var(--background);
+  border-color: var(--primary);
 }
 
 /* Container for navigation links at the top */
@@ -655,22 +733,6 @@ label input[type="checkbox"] {
   margin: 0.5em 2em 0 2em;
 
   color: var(--secondary);
-}
-
-.button {
-  font-size: var(--font-small);
-  display: inline-block;
-  
-  text-align: center;
-  text-decoration: none;
-
-  padding: 0;
-  border: none;
-
-  background-color: var(--background);
-  color: var(--primary);
-  
-  cursor: pointer;
 }
 
 /* #endregion */
@@ -773,23 +835,43 @@ label input[type="checkbox"] {
 
 .crt-slot-mask {
   /* Recreation of shadow mask's phosphor layout */
-  background-size: 8px 4px;
+  background-size: 4px 6px;
   background-blend-mode: overlay;
   background-image:
     linear-gradient(
       to right,
-      var(--crt-dark) 10%, /* Left padding end */
-      var(--crt-phosphor-red) 10% 30%, /* 643 nm */
-      var(--crt-dark) 30% 40%,
-      var(--crt-phosphor-green) 40% 60%, /* 526 nm */
-      var(--crt-dark) 60% 70%,
-      var(--crt-phosphor-blue) 70% 90%, /* 450 nm */
-      var(--crt-dark) 90% /* Right padding start */
+      var(--crt-dark) 0.5px, /* Left padding end */
+      var(--crt-phosphor-red) 0.5px 1.5px, /* 643 nm */
+      /* var(--crt-dark) 2px 2.5px, */
+      var(--crt-phosphor-green) 1.5px 2.5px, /* 526 nm */
+      /* var(--crt-dark) 4.5px 5px, */
+      var(--crt-phosphor-blue) 2.5px 3.5px, /* 450 nm */
+      var(--crt-dark) 3.5px /* Right padding start */
     ),
     linear-gradient(
       to bottom,
-      var(--crt-transparent) 70%,
-      var(--crt-dark) 70%
+      var(--crt-transparent) 5px,
+      var(--crt-dark) 5px
+    );
+  
+  /* Apply colours to content behind */
+  mix-blend-mode: multiply;
+}
+
+.crt-aperture-grille {
+  /* Recreation of shadow mask's phosphor layout */
+  background-size: 4px 100vh;
+  background-blend-mode: overlay;
+  background-image:
+    linear-gradient(
+      to right,
+      var(--crt-dark) 0.5px, /* Left padding end */
+      var(--crt-phosphor-red) 0.5px 1.5px, /* 643 nm */
+      /* var(--crt-dark) 2px 2.5px, */
+      var(--crt-phosphor-green) 1.5px 2.5px, /* 526 nm */
+      /* var(--crt-dark) 4.5px 5px, */
+      var(--crt-phosphor-blue) 2.5px 3.5px, /* 450 nm */
+      var(--crt-dark) 3.5px /* Right padding start */
     );
   
   /* Apply colours to content behind */
