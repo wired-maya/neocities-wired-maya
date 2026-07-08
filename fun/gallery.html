@@ -11,6 +11,8 @@
         <script src="/js/crt-overlay.js" type="module"></script>
         <script src="/js/page-transition.js" type="module"></script>
         <script src="/js/animations.js" type="module"></script>
+
+        <script src="/js/gallery.js" type="module"></script>
     </head>
     <body>
         <div class="nav-container">
@@ -22,49 +24,12 @@
         <div class="gallery-card">
             <h1>My cat! :D</h1>
             <h3>Rest in Peace, Piper <3</h3>
-            <input id="gallerySlider" class="gallery-slider" type="range" min="0" max="10" onchange="setGallery(this.value)" />
+            <input id="kittySliderElement" class="gallery-slider" type="range" min="0" max="10" onchange="kittyGallery.setGallery(this.value)" />
             <div class="gallery-img-container">
-                <button class="gallery-arrow-left" onclick="scrollGallery(-1)"><</button>
-                <img id="galleryImg" class="gallery-img">
-                <button class="gallery-arrow-right" onclick="scrollGallery(1)">></button>
+                <button class="gallery-arrow-left" onclick="kittyGallery.scrollGallery(-1)"><</button>
+                <img id="kittyImgElement" class="gallery-img">
+                <button class="gallery-arrow-right" onclick="kittyGallery.scrollGallery(1)">></button>
             </div>
         </div>
-
-        <script>
-            var i = 0;
-            var images = [
-                "PXL_20230215_210425193.jpg",
-                "PXL_20230303_222245983.jpg",
-                "PXL_20230303_222307987.jpg",
-                "PXL_20230425_211841997.jpg",
-                "PXL_20230425_211932289.jpg",
-                "PXL_20230425_212031667.MP.jpg",
-                "PXL_20230601_155407214.jpg",
-                "PXL_20230720_020921585.MP.jpg",
-                "PXL_20230720_020945077.MP.jpg",
-                "PXL_20230722_041157156.MP.jpg",
-                "PXL_20230801_001157041.jpg"
-            ];
-            var img = document.getElementById("galleryImg");
-            var slider = document.getElementById("gallerySlider");
-
-            // Init state
-            setGallery(i);
-
-            function scrollGallery(offset) {
-                i += offset;
-                if (i >= images.length) i = 0;
-                if (i <= -1) i = images.length - 1;
-
-                setGallery(i);
-            }
-
-            function setGallery(pos) {
-                i = parseInt(pos);
-
-                slider.value = i;
-                img.src = "/assets/gallery/my-cat/" + images[i];
-            }
-        </script>
     </body>
 </html>
