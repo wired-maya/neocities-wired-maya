@@ -1,7 +1,7 @@
 export class Gallery {
     index = 0;
     folderPath = "/";
-    imageNames = [];
+    images = [];
 
     slider;
     img;
@@ -19,14 +19,13 @@ export class Gallery {
     }
 
     scrollGallery(offset) {
-        this.index += offset; // Can just add here because modulo calc is done later
-
-        this.setGallery(this.index);
+        this.setGallery(this.index + offset);
     }
 
     // Overflow values wrap around
     setGallery(pos) {
-        this.index = Math.abs((this.images.length + parseInt(pos)) % this.images.length);
+        this.index = pos % this.images.length;
+        if (pos < 0) this.index += this.images.length;
 
         this.slider.value = this.index;
         this.img.src = this.folderPath + this.images[this.index];

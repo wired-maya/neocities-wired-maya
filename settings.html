@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>wired_maya's Home</title>
+    <title>Set The Sunset</title>
     <link rel="icon" href="/assets/logos/cat eye.svg" type="image/svg+xml">
 
     <link href="/styles/main.css" rel="stylesheet" type="text/css" media="all">
@@ -34,28 +34,23 @@
             <option value="crt-triad-mask">Triad Shadow Mask</option>
             <option value="crt-aperture-grille">Aperture Grille</option>
           </select></label>
-          <p class="setting-description">
+          <p class="description">
             Select from the three major focus methods! So many choices!
-            <br><br>
-            In a CRT, this is a metal plate in behind the phosphors on the screen. CRTs have three separate
-            electron guns for lighting the phosphors, one for red, green, and blue respectively.
-            Due to the difference in position of each gun, the electrons go through the holes at
-            different angles, ensuring the correct electron beam hits the correct phosphor.
           </p>
         </div>
         <div>
           <label>Jitter Height:
             <input id="crtOverlayJitter" type="number" step="0.1" min="0.0" onchange="window.crtOverlayUpdateField('crtAnimJitterDiff', this.value);" />
           </label>
-          <p class="setting-description">
-            The height the content is offset by. Simulates a video timing mismatch on a CRT. Pixels.
+          <p class="description">
+            The height the content is offset by. Simulates interlacing artefacts on a CRT. Pixels.
           </p>
         </div>
         <div>
           <label>Flicker Intensity:
             <input id="crtOverlayFlicker" type="range" min="0" max="255" onchange="window.crtOverlayUpdateField('crtFlickerColour', this.value);" />
           </label>
-          <p class="setting-description">
+          <p class="description">
             Controls the max opacity of the flicker overlay. 0 - 255.
           </p>
         </div>
@@ -63,7 +58,7 @@
           <label>Pre Blur:
             <input id="crtOverlayPreBlur" type="number" step="0.1" min="0.0" onchange="window.crtOverlayUpdateField('crtPreBlur', this.value);" />
           </label>
-          <p class="setting-description">
+          <p class="description">
             The blur applied underneath the CRT overlay. Gives softer appearance. Pixels.
           </p>
         </div>
@@ -71,7 +66,7 @@
           <label>Post Brightness:
             <input id="crtOverlayPostBright" type="number" step="0.1" min="0.0" onchange="window.crtOverlayUpdateField('crtPostBrightness', this.value);" />
           </label>
-          <p class="setting-description">
+          <p class="description">
             Brightness applied over the CRT overlay. Multiplier.
           </p>
         </div>
@@ -89,8 +84,8 @@
           <label>Jitter Height:
             <input id="pageTransitionJitter" type="number" step="0.1" min="0.0" onchange="window.crtOverlayUpdateField('transitionAnimJitterDiff', this.value);" />
           </label>
-          <p class="setting-description">
-            The height the content is offset by when loading a new page. Simulates a video timing mismatch on a CRT. Pixels.
+          <p class="description">
+            The height the content is offset by when loading a new page. Simulates interlacing artefacts on a CRT. Pixels.
             <br><br>
             Since this is related to the CRT filter, it is does nothing if the CRT filter isn't enabled.
           </p>

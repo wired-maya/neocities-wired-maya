@@ -535,6 +535,7 @@ label input[type="checkbox"] {
 
 /* #region Component Styling */
 
+/* Set content div as content bounding box */
 #content {
   contain: layout;
 }
@@ -726,13 +727,105 @@ label input[type="checkbox"] {
   font-weight: 900;
 }
 
-.setting-description {
+.post-description {
+  display: block;
   font-size: var(--font-very-small);
   text-wrap: balance;
 
-  margin: 0.5em 2em 0 2em;
+  margin: -2em 0;
 
   color: var(--secondary);
+}
+
+.post-description-bright {
+  display: block;
+  font-size: var(--font-small);
+  text-wrap: balance;
+
+  margin: -2em 0 0 0;
+
+  color: var(--primary);
+}
+
+.description {
+  display: inline-block;
+  font-size: var(--font-very-small);
+  text-wrap: balance;
+
+  margin: 0.5em 2em 2em 2em;
+
+  color: var(--secondary);
+}
+
+.diagram {
+  display: block;
+  max-width: calc(100% - 4em);
+  height: auto;
+  margin: 0.5em 2em;
+
+  border-radius: var(--corner-radius);
+  border: var(--accent) solid var(--border-thickness);
+
+  background-color: #FFFFFF;
+}
+
+.code-container {
+  display: block;
+  position: relative;
+  font-size: var(--font-very-small);
+  min-height: 12em;
+  max-height: 22em;
+  margin: 2em 3em;
+  padding: 1em;
+
+  border-radius: var(--corner-radius);
+  border: var(--accent) solid var(--border-thickness);
+
+  color: var(--secondary);
+
+  &::before {
+    content: "{} [code]";
+
+    position: absolute;
+    right: calc(100% + 0.5em);
+    transform: scale(-1); /* Text top is now left */
+
+    writing-mode: vertical-rl;
+    text-wrap-style: pretty;
+  }
+}
+
+.css-code-container::before { content: ".code { lang: 'css' }" }
+.html-code-container::before { content: "<html>code</html>" }
+.js-code-container::before { content: "var lang = 'JavaScript'" }
+
+.code-content {
+  display: block;
+  overflow: auto;
+  min-height: 10em;
+  max-height: 20em;
+  width: 100%;
+  
+  white-space: pre;
+}
+
+.code-copy-button {
+  position: absolute;
+  top: -1em;
+  right: -1em;
+}
+
+/* Ephemeral moments */
+.page-says-goodbye {
+  font-size: var(--font-small);
+  margin-top: 7em;
+
+  font-style: italic;
+  text-wrap-mode: nowrap;
+  letter-spacing: 0.7em;
+  text-align: end;
+
+  color: var(--background-bright);
 }
 
 /* #endregion */
@@ -878,7 +971,7 @@ label input[type="checkbox"] {
   mix-blend-mode: multiply;
 }
 
-/* Blur before the CRT mask to increase colour clarity and simulate phosphor glow */
+/* Blur before the CRT mask to increase colour clarity */
 .crt-pre-blur {
   backdrop-filter: blur(var(--crt-pre-blur))
 }
@@ -889,9 +982,6 @@ label input[type="checkbox"] {
 }
 
 /* Simulate visual artefact of interlacing jitter */
-/* Since this is painful to look at for long stretches of time,
-   It is being used sparingly for specific content instead of
-   the entire site. */
 .crt-interlacing-jitter {
   --jitter-diff: var(--crt-anim-jitter-diff);
 

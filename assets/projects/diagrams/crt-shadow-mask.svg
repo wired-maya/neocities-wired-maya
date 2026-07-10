@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="297mm"
+   height="210mm"
+   viewBox="0 0 297 210"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   sodipodi:docname="crt-shadow-mask.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.0993126"
+     inkscape:cx="397.97598"
+     inkscape:cy="409.34672"
+     inkscape:window-width="2560"
+     inkscape:window-height="1412"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="28.881687 : 165.65154 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="193.98865 : 193.5705 : 1"
+       inkscape:persp3d-origin="48.136139 : 116.2107 : 1"
+       id="perspective1" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <ellipse
+       style="fill:#0050b8;fill-opacity:1;stroke-width:0.915457"
+       id="ellipse35"
+       cx="-59.399975"
+       cy="98.641472"
+       rx="13.93638"
+       ry="8.8131056"
+       transform="matrix(0.08392126,-0.99647239,0.99235823,0.12339017,0,0)" />
+    <ellipse
+       style="fill:#00cc00;fill-opacity:1;stroke-width:0.951197"
+       id="ellipse34"
+       cx="-70.24437"
+       cy="78.652145"
+       rx="13.589351"
+       ry="9.7576523"
+       transform="matrix(0.09545462,-0.99543378,0.99409017,0.10855755,0,0)" />
+    <ellipse
+       style="fill:#a80000;fill-opacity:1"
+       id="path34"
+       cx="-81.448341"
+       cy="57.569031"
+       rx="13.839141"
+       ry="10.589952"
+       transform="rotate(-84.157174)" />
+    <path
+       style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
+       d="M 38.268232,62.336304 37.78687,156.44246 102.2893,131.89303 102.52998,41.637762 Z"
+       id="path23" />
+    <path
+       style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:1.23027;stroke-dasharray:none;stroke-opacity:1"
+       d="m 123.94832,56.944516 -0.61213,112.005544 82.02769,-29.21883 0.30607,-107.422207 z"
+       id="path23-3" />
+    <path
+       style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
+       d="m 156.44246,60.65154 -0.96272,83.27552 22.38331,-7.70178 -0.24069,-82.312802 z"
+       id="path24" />
+    <path
+       style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:1;stroke-dasharray:4,2,1,2;stroke-opacity:1;stroke-dashoffset:7.2"
+       d="M 266.19287,115.52674 156.20178,94.587519 Z"
+       id="path25" />
+    <path
+       style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:1;stroke-dasharray:4, 2, 1, 2;stroke-dashoffset:7.2;stroke-opacity:1"
+       d="M 123.22852,87.84846 71.00081,77.98055 Z"
+       id="path26" />
+    <path
+       style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:1;stroke-dasharray:4, 2, 1, 2;stroke-dashoffset:7.2;stroke-opacity:1"
+       d="M 123.95056,93.624796 49.098866,87.126417"
+       id="path29" />
+    <path
+       style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:1;stroke-dasharray:4, 2, 1, 2;stroke-dashoffset:7.2;stroke-opacity:1"
+       d="M 91.21799,71.722852 122.2658,82.794164"
+       id="path31" />
+    <path
+       style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:1;stroke-dasharray:4, 2, 1, 2;stroke-dashoffset:7.2;stroke-opacity:1"
+       d="m 156.44246,92.421394 87.3671,30.566446"
+       id="path32" />
+    <path
+       style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:1;stroke-dasharray:4, 2, 1, 2;stroke-dashoffset:7.2;stroke-opacity:1"
+       d="M 156.20178,94.106157 276.06077,104.93679"
+       id="path33" />
+  </g>
+</svg>

@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yes this website!</title>
+    <link rel="icon" href="/assets/logos/cat eye.svg" type="image/svg+xml">
+
+    <link href="/styles/main.css" rel="stylesheet" type="text/css" media="all">
+
+    <script src="/js/crt-overlay.js" type="module"></script>
+    <script src="/js/page-transition.js" type="module"></script>
+    <script src="/js/animations.js" type="module"></script>
+    <script src="/js/code-element.js" type="module"></script>
+  </head>
+  <body>
+    <div class="nav-container">
+      <a class="nav-left" href="/index.html">* [return home]</a>
+      <a class="nav-middle" href="/settings.html">% [settings]</a>
+      <a class="nav-right" href="./">^ [go up]</a>
+    </div>
+
+    <p class="post-description">
+      > 2026-07-09
+      <br>
+      > <a href="https://github.com/wired-maya/neocities-wired-maya">GitHub Link</a>
+      <br><br>
+    </p>
+
+    <h1 class="post-title">This Website!?</h1>
+    <p>
+      Yes this website! I am proud of it, it seems. I thought some of the things I did were
+      kind of interesting, so I'm sharing.
+    </p>
+
+    <h2 class="left-align">About</h2>
+    <p>
+        Originally, this was meant to be a website for linking to my internet profiles. It turned
+        out that it was actually really fun to build my own website. Whenever I make something
+        I try to put my personality into it, otherwise why make it in the first place?
+        <br><br>
+        I decided for fun to use just HTML, CSS, and JS, no frameworks. A Web 1.0-ish website if
+        you will. This meant that I had to work within
+        the limitations, and I've had a great time (mostly working on CSS).
+        This hosting website (NeoCities) carries that philosophy, and a lot of people
+        make incredibly interesting and creative websites from just nothing but blood (JS),
+        sweat (HTML), and tears (CSS).
+        <a href="https://neocities.org/browse">Seriously, check them out!</a>
+        <br><br>
+        Since I was updating my website, I increased the scope: add some fun and interesting
+        pages every now and then, make it feel like an interesting rabbit hole. And to share
+        things I find interesting too of course! This leads us to this very web page :].
+    </p>
+
+    <h2 class="left-align">Electron Stars, or "on the prettiness of CRTs"</h2>
+    <p>
+        They are quite pretty. I super duper love CRTs. Was that a good reason to spend ages
+        trying to get an accurate CRT filter through pure CSS? I think so, but you're free to
+        judge :p.
+        <br><br>
+        There were 2 (major) methods of focusing the electron beams in the back of a CRT. The most common
+        one was called the "Shadow Mask". In a CRT, there is a metal plate in front of the phosphors (types
+        of molecules that releases light when hit by electrons) on the screen. CRTs have three
+        separate electron guns for illuminating the phosphors, one for red, green, and blue
+        respectively. Due to the difference in position of each gun, the electrons go through
+        the holes at different angles, ensuring the correct electron beam hits the correct
+        coloured phosphor. That's how pictures are made!
+        <br><br>
+        <img src="/assets/projects/diagrams/crt-shadow-mask.svg", class="diagram">
+        <span class="description">
+          A depiction of the separate electron beams hitting their corresponding phosphor. I made this :D!
+        </span>
+        The second, and often lauded, technology is called the aperture grille. It was known by
+        its trade name, "Trinitron". This worked on a similar principle as the shadow mask
+        (preventing the beams from hitting where they shouldn't), but instead used thin vertical
+        wires in front of the phosphor coating. This allowed for unbroken phosphor strips, without
+        the horizontal black lines seen with the shadow mask. It also allowed each strip to be
+        closer together (a higher dot pitch). This created significantly clearer images, which is
+        why they are so sought after by CRT enthusiasts (one of which is me!).
+    </p>
+
+    <h2 class="left-align">So, how does one make a CRT filter?</h2>
+    <p>
+      Now, the typical way to do something like this would be to make vector images of each
+      type of mask, then overlay them in a repeating background. I felt like having a challenge,
+      so I did it with pure CSS. I'm kind of proud of this.
+      <br><br>
+      I started with a class for screen filters. It extends a div over the entirety of the viewport
+      (or, the window you can actually see). Easy!
+      <span class="code-container css-code-container">
+        <button class="code-copy-button" onclick="window.copyCode(this)">Copy</button>
+        <span class="code-content">.screen-filter {
+  content: " ";
+  position: fixed;
+            
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+            
+  width: 100vw;
+  height: 100vh;
+            
+  pointer-events: none;
+  z-index: 10;
+}</span>
+      </span>
+    </p>
+
+    <h3 class="left-align">Jittering, not the anxiety kind</h3>
+    <p>
+      There are 5 components to each page with the filter enabled. First is the content div, in
+      which every element meant to be displayed is put into. This helps organizing and styling,
+      as well as being what we apply the jitter class to. The applied jitter is meant to recreate
+      interlacing issues, so the content jumps all up and down.
+      The other four components are divs appended to the body after the content block. Because of the filter
+      class, each overlay div will stack filters on top of the screen, in order of bottom to top.
+      This jittering also happens on page transitions, which you will see in the CSS.
+      <br><br>
+      Here is the full code including the animations,
+      it's mostly just applying an up/down animation to the content.
+      <span class="code-container css-code-container">
+        <button class="code-copy-button" onclick="window.copyCode(this)">Copy</button>
+        <span class="code-content">/* Constants */
+:root {
+  /* CRT anim properties */
+  --crt-anim-jitter-diff: 1px;
+  --crt-anim-jitter-diff-page-load: 75px;
+}
+
+@property --jitter-diff {
+  syntax: "&lt;length&gt; | &lt;percentage&gt;";
+  inherits: false;
+  initial-value: 0px;
+}
+
+/* Simulate visual artefact of interlacing jitter */
+.crt-interlacing-jitter {
+  --jitter-diff: var(--crt-anim-jitter-diff);
+
+  animation: crt-anim-jitter-diff-anim 250ms ease-out, crt-anim-interlacing-jitter 100ms infinite;
+  animation-composition: add;
+}
+
+@keyframes crt-anim-jitter-diff-anim {
+  0% {
+    transform: translateY(var(--crt-anim-jitter-diff-page-load));
+  }
+  5% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * -0.9));
+  }
+  10% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * 0.8));
+  }
+  15% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * -0.7));
+  }
+  25% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * 0.6));
+  }
+  35% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * -0.5));
+  }
+  45% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * 0.4));
+  }
+  55% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * -0.3));
+  }
+  70% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * 0.2));
+  }
+  85% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * -0.1));
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes crt-anim-interlacing-jitter {
+  0% {
+    transform: translateY(var(--jitter-diff));
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}</span>
+      </span>
+      Here, I keep my variables neatly tucked inside the :root element. This means they are
+      accessible anywhere, so I use them as constants/variables. The @keyframe blocks define
+      the animations that will be used. Within the percentage blocks (although they can be
+      time as well) you can edit any property of the element you are attaching the animation
+      to. The properties will then be transitioned between, you are setting keyframes.
+      <br><br>
+      To make the custom variable be able to work with animations, you need to tell the page that the
+      property exists. It's polite. You define the property with an @property block.
+      The allowed syntaxes are set, separated by a vertical pipe.
+      Choose whether the property is inherited from its parents,
+      and finally set an initial value. All 3 of these properties are required to define an @property.
+    </p>
+
+    <h3 class="left-align">Pre-blur</h3>
+    <p>
+      Appended first is the pre-blur filter. it adds a simple blur over the entire content of the
+      page. This helps text edges be softer, making the colour continuous instead
+      of having the edges only displayed on one colour's phosphor.
+
+      <span class="code-container css-code-container">
+        <button class="code-copy-button" onclick="window.copyCode(this)">Copy</button>
+        <span class="code-content">:root {
+  /* Other CRT properties */
+  --crt-pre-blur: 1px;
+}
+
+/* Blur before the CRT mask to increase colour clarity */
+.crt-pre-blur {
+  backdrop-filter: blur(var(--crt-pre-blur))
+}</span>
+      </span>
+    </p>
+    
+    <h3 class="left-align">CRT filter</h3>
+    <p>
+      Second place is the CRT filter itself. Each method has its own CSS class.
+      The filter uses the multiply blend mode, meaning that the colours of
+      the content below is multiplied by (in other words, shifted towards) the colour of the CRT
+      overlay. This means that a red phosphor's brightness corresponds to the brightness of the red
+      in the content below, and so on. A later section will go into the colours I used for each phosphor.
+      I will provide below the code to each of them, feel free to use them wherever you'd like.
+      <span class="code-container css-code-container">
+        <button class="code-copy-button" onclick="window.copyCode(this)">Copy</button>
+        <span class="code-content">/* Constants */
+:root {
+  /* CRT colours */
+  --crt-dark: #000000FF;
+  --crt-transparent: #00000000;
+  --crt-phosphor-red: #FF3100;
+  --crt-phosphor-green: #83FF00;
+  --crt-phosphor-blue: #007CFF;
+}
+.crt-triad-mask {
+  /* Recreation of dot mask's phosphor layout */
+  background-size: 6px 3px;
+  background-blend-mode: overlay;
+  background-image:
+    linear-gradient(
+      var(--crt-dark)
+    ),
+    radial-gradient(
+      circle
+      closest-side at 10% 35%,
+      var(--crt-phosphor-green) 100%, /* 526 nm */
+      var(--crt-transparent) 100%
+    ),
+    radial-gradient(
+      circle
+      closest-side at 40% 30%,
+      var(--crt-phosphor-blue) 80%, /* 526 nm */
+      var(--crt-transparent) 80%
+    ),
+    radial-gradient(
+      circle
+      closest-side at 30% 80%,
+      var(--crt-phosphor-red) 100%, /* 526 nm */
+      var(--crt-transparent) 100%
+    ),
+    radial-gradient(
+      circle
+      closest-side at 60% 80%,
+      var(--crt-phosphor-green) 100%, /* 526 nm */
+      var(--crt-transparent) 100%
+    ),
+    radial-gradient(
+      circle
+      closest-side at 90% 75%,
+      var(--crt-phosphor-blue) 100%, /* 526 nm */
+      var(--crt-transparent) 100%
+    ),
+    radial-gradient(
+      circle
+      closest-side at 75% 35%,
+      var(--crt-phosphor-red) 65%, /* 526 nm */
+      var(--crt-transparent) 65%
+    );
+  
+  /* Apply colours to content behind */
+  mix-blend-mode: multiply;
+}
+
+.crt-slot-mask {
+  /* Recreation of shadow mask's phosphor layout */
+  background-size: 4px 6px;
+  background-blend-mode: overlay;
+  background-image:
+    linear-gradient(
+      to right,
+      var(--crt-dark) 0.5px, /* Left padding end */
+      var(--crt-phosphor-red) 0.5px 1.5px, /* 643 nm */
+      /* var(--crt-dark) 2px 2.5px, */
+      var(--crt-phosphor-green) 1.5px 2.5px, /* 526 nm */
+      /* var(--crt-dark) 4.5px 5px, */
+      var(--crt-phosphor-blue) 2.5px 3.5px, /* 450 nm */
+      var(--crt-dark) 3.5px /* Right padding start */
+    ),
+    linear-gradient(
+      to bottom,
+      var(--crt-transparent) 5px,
+      var(--crt-dark) 5px
+    );
+  
+  /* Apply colours to content behind */
+  mix-blend-mode: multiply;
+}
+
+.crt-aperture-grille {
+  /* Recreation of shadow mask's phosphor layout */
+  background-size: 4px 100vh;
+  background-blend-mode: overlay;
+  background-image:
+    linear-gradient(
+      to right,
+      var(--crt-dark) 0.5px, /* Left padding end */
+      var(--crt-phosphor-red) 0.5px 1.5px, /* 643 nm */
+      /* var(--crt-dark) 2px 2.5px, */
+      var(--crt-phosphor-green) 1.5px 2.5px, /* 526 nm */
+      /* var(--crt-dark) 4.5px 5px, */
+      var(--crt-phosphor-blue) 2.5px 3.5px, /* 450 nm */
+      var(--crt-dark) 3.5px /* Right padding start */
+    );
+  
+  /* Apply colours to content behind */
+  mix-blend-mode: multiply;
+}</span>
+      </span>
+      Phosphors were recreated by using gradient functions stacked on top of each to form
+      a repeating background. Each colour of RGB has been represented, with a dark colour
+      (doesn't have to be black if you wanna be fancy :3) representing the wires/shadow mask,
+      which blocks the electrons from lighting the phosphors. The sizes are tuned to my preference,
+      and what I think makes text legible.
+    </p>
+    
+    <h3 class="left-align">Post-brightness</h3>
+    <p>
+      Third div. Applies a simple brightness multiplier over the content behind. Lights up the
+      content which got darker due to the CRT filter.
+      <span class="code-container css-code-container">
+        <button class="code-copy-button" onclick="window.copyCode(this)">Copy</button>
+        <span class="code-content">/* Constants */
+:root {
+  /* Other CRT properties */
+  --crt-post-brightness: 1.5;
+}
+
+/* Adjust brightness of screen to preserve colours */
+.crt-post-brightness {
+  backdrop-filter: brightness(var(--crt-post-brightness));
+}</span>
+      </span>
+    </p>
+    <h3 class="left-align">Flickering lights</h3>
+    <p>
+      The old tube TV acting up again? Well now you can have it act up in your browser!
+      Creates an all encompassing void that animates quickly between multiple opacities.
+      Recreates a failing tube, which while sad does look pretty cool.
+      <span class="code-container css-code-container">
+        <button class="code-copy-button" onclick="window.copyCode(this)">Copy</button>
+        <span class="code-content">/* Constants */
+:root {
+  /* CRT colours */
+  --crt-flicker-colour: #12101033;
+}
+
+/* Flicker */
+.crt-flicker {
+  opacity: 0;
+  background: var(--crt-flicker-colour);
+  
+  animation: crt-anim-flicker 0.15s infinite;
+}
+
+/* Example animation */
+@keyframes crt-anim-flicker {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}</span>
+      </span>
+    </p>
+
+    <h3 class="left-align">Finally,</h3>
+    <p>
+      To apply any one of these filters, you just need to style a div with the filter's class
+      and the screen-filter class. Wrap your content in a content div, put the filter divs
+      after it in order, CRT time! (Wahoo, and so on).
+      <br><br>
+      Full CSS/HTML:
+      <span class="code-container css-code-container">
+        <button class="code-copy-button" onclick="window.copyCode(this)">Copy</button>
+        <span class="code-content">/* Constants */
+:root {
+  /* CRT colours */
+  --crt-dark: #000000FF;
+  --crt-transparent: #00000000;
+  --crt-flicker-colour: #12101033;
+  --crt-phosphor-red: #FF3100;
+  --crt-phosphor-green: #83FF00;
+  --crt-phosphor-blue: #007CFF;
+
+  /* CRT anim properties */
+  --crt-anim-jitter-diff: 1px;
+  --crt-anim-jitter-diff-page-load: 75px;
+
+  /* Other CRT properties */
+  --crt-pre-blur: 1px;
+  --crt-post-brightness: 1.5;
+}
+
+/********Property Definitions********/
+
+@property --jitter-diff {
+  syntax: "&lt;length&gt; | &lt;percentage&gt;";
+  inherits: false;
+  initial-value: 0px;
+}
+
+/********Utility Classes********/
+
+/* Stretches implementing div over entire viewport so it acts as a filter */
+.screen-filter {
+  content: " ";
+  position: fixed;
+
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Set content div as content bounding box */
+#content {
+  contain: layout;
+}
+
+/********CRT Filter********/
+
+/* Flicker */
+.crt-flicker {
+  opacity: 0;
+  background: var(--crt-flicker-colour);
+  
+  animation: crt-anim-flicker 0.15s infinite;
+}
+
+.crt-triad-mask {
+  /* Recreation of dot mask's phosphor layout */
+  background-size: 6px 3px;
+  background-blend-mode: overlay;
+  background-image:
+    linear-gradient(
+      var(--crt-dark)
+    ),
+    radial-gradient(
+      circle
+      closest-side at 10% 35%,
+      var(--crt-phosphor-green) 100%, /* 526 nm */
+      var(--crt-transparent) 100%
+    ),
+    radial-gradient(
+      circle
+      closest-side at 40% 30%,
+      var(--crt-phosphor-blue) 80%, /* 526 nm */
+      var(--crt-transparent) 80%
+    ),
+    radial-gradient(
+      circle
+      closest-side at 30% 80%,
+      var(--crt-phosphor-red) 100%, /* 526 nm */
+      var(--crt-transparent) 100%
+    ),
+    radial-gradient(
+      circle
+      closest-side at 60% 80%,
+      var(--crt-phosphor-green) 100%, /* 526 nm */
+      var(--crt-transparent) 100%
+    ),
+    radial-gradient(
+      circle
+      closest-side at 90% 75%,
+      var(--crt-phosphor-blue) 100%, /* 526 nm */
+      var(--crt-transparent) 100%
+    ),
+    radial-gradient(
+      circle
+      closest-side at 75% 35%,
+      var(--crt-phosphor-red) 65%, /* 526 nm */
+      var(--crt-transparent) 65%
+    );
+  
+  /* Apply colours to content behind */
+  mix-blend-mode: multiply;
+}
+
+.crt-slot-mask {
+  /* Recreation of shadow mask's phosphor layout */
+  background-size: 4px 6px;
+  background-blend-mode: overlay;
+  background-image:
+    linear-gradient(
+      to right,
+      var(--crt-dark) 0.5px, /* Left padding end */
+      var(--crt-phosphor-red) 0.5px 1.5px, /* 643 nm */
+      /* var(--crt-dark) 2px 2.5px, */
+      var(--crt-phosphor-green) 1.5px 2.5px, /* 526 nm */
+      /* var(--crt-dark) 4.5px 5px, */
+      var(--crt-phosphor-blue) 2.5px 3.5px, /* 450 nm */
+      var(--crt-dark) 3.5px /* Right padding start */
+    ),
+    linear-gradient(
+      to bottom,
+      var(--crt-transparent) 5px,
+      var(--crt-dark) 5px
+    );
+  
+  /* Apply colours to content behind */
+  mix-blend-mode: multiply;
+}
+
+.crt-aperture-grille {
+  /* Recreation of shadow mask's phosphor layout */
+  background-size: 4px 100vh;
+  background-blend-mode: overlay;
+  background-image:
+    linear-gradient(
+      to right,
+      var(--crt-dark) 0.5px, /* Left padding end */
+      var(--crt-phosphor-red) 0.5px 1.5px, /* 643 nm */
+      /* var(--crt-dark) 2px 2.5px, */
+      var(--crt-phosphor-green) 1.5px 2.5px, /* 526 nm */
+      /* var(--crt-dark) 4.5px 5px, */
+      var(--crt-phosphor-blue) 2.5px 3.5px, /* 450 nm */
+      var(--crt-dark) 3.5px /* Right padding start */
+    );
+  
+  /* Apply colours to content behind */
+  mix-blend-mode: multiply;
+}
+
+/* Blur before the CRT mask to increase colour clarity */
+.crt-pre-blur {
+  backdrop-filter: blur(var(--crt-pre-blur))
+}
+
+/* Adjust brightness of screen to preserve colours */
+.crt-post-brightness {
+  backdrop-filter: brightness(var(--crt-post-brightness));
+}
+
+/* Simulate visual artefact of interlacing jitter */
+.crt-interlacing-jitter {
+  --jitter-diff: var(--crt-anim-jitter-diff);
+
+  animation: crt-anim-jitter-diff-anim 250ms ease-out, crt-anim-interlacing-jitter 100ms infinite;
+  animation-composition: add;
+}
+
+@keyframes crt-anim-flicker {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
+
+@keyframes crt-anim-jitter-diff-anim {
+  0% {
+    transform: translateY(var(--crt-anim-jitter-diff-page-load));
+  }
+  5% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * -0.9));
+  }
+  10% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * 0.8));
+  }
+  15% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * -0.7));
+  }
+  25% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * 0.6));
+  }
+  35% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * -0.5));
+  }
+  45% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * 0.4));
+  }
+  55% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * -0.3));
+  }
+  70% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * 0.2));
+  }
+  85% {
+    transform: translateY(calc(var(--crt-anim-jitter-diff-page-load) * -0.1));
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes crt-anim-interlacing-jitter {
+  0% {
+    transform: translateY(var(--jitter-diff));
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}</span>
+      </span>
+      <span class="code-container html-code-container">
+        <button class="code-copy-button" onclick="window.copyCode(this)">Copy</button>
+        <span class="code-content">&lt;div id=&quot;content&quot;&gt;
+  &lt;h1&gt;Hello!&lt;/h1&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;screen-filter crt-pre-blur&quot; id=&quot;crtPreBlur&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;screen-filter crt-triad-mask&quot; id=&quot;crtFilter&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;screen-filter crt-post-brightness&quot; id=&quot;crtPostBrightness&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;screen-filter crt-flicker&quot; id=&quot;crtFlicker&quot;&gt;&lt;/div&gt;</span>
+      </span>
+    </p>
+
+    <h2 class="left-align">Where did those phosphor colours come from?</h2>
+    <p>
+      Intrepid and adorable readers, like you, might have noticed those weird colour values I had for the CRT
+      filter's phosphor colours. What's that about? Well, the phosphors used for CRT screens don't
+      emit a perfect red, green, or blue. They instead emit colours of specific wavelengths, that
+      combine to create the many colours possible on a display. Here are the values again:
+      <span class="code-container css-code-container">
+        <button class="code-copy-button" onclick="window.copyCode(this)">Copy</button>
+        <span class="code-content">/* Constants */
+:root {
+  /* CRT colours */
+  --crt-phosphor-red: #FF3100;
+  --crt-phosphor-green: #83FF00;
+  --crt-phosphor-blue: #007CFF;
+}</span>
+      </span>
+      So, where does one get wavelengths...? Well first I took a gander at the tried and true
+      <a href="https://en.wikipedia.org/wiki/Phosphor#Standard_phosphor_types">Wikipedia</a>.
+      P22, a set of phosphors for TVs is there. Complete with their -- blue's
+      wavelength is missing?!
+      <br><br>
+      Well, after spelunking the web, I came across
+      <a href="https://www.labguysworld.com/crt_phosphor_research.pdf">this PDF</a>.
+      It's honestly a really pretty table of values, I love looking at it. That aside,
+      it contains more than the Wikipedia article. Not just that, the wonderful P22 is here
+      with a complete set of wavelengths! This section is laid out weirdly, there seem to be
+      multiple of the same type of phosphor with different or missing wavelengths. Despite that,
+      I got what I needed.
+      <br><br>
+      Wavelengths: Red 643nm, Green 526nm, Blue 450nm.
+      <br><br>
+      So, how do I make these into those pretty hexadecimal colour codes? Glad you realized
+      how pretty the codes are. I got the idea from this
+      <a href="https://publish.obsidian.md/xybre/permalink/e397c38e-aa6f-45eb-831f-f02a3836abc4">absolutely stellar blog</a>.
+      They didn't cover P22, but they did cover a lot of interesting information about phosphors
+      and wavelengths, as well as some conversion methods. I highly recommend reading through it.
+      Admittedly I ended up poking around for a good seeming online converter, but I felt like
+      recommending out that blog regardless.
+      <br><br>
+      I used an online converter by a company called
+      <a href="https://syronoptics.com/blogs/tools/wavelength-to-color-converter">SyronOptics</a>,
+      a company that develops optical equipment. They seemed well known, so I decided to trust them.
+      They even have a "Shop by Wavelength" button on their website, that's just awesome! The converter
+      let me get those colour codes I showed above.
+    </p>
+
+    <h2 class="left-align">Hey hey hurray! Here's the conclusion &gt;u&lt;</h2>
+    <p>
+      I am, kind of proud of this website! Sure it's not too crazy, but I had fun making it,
+      and it's nice to have a silly little space to put my things. I really hope you think
+      it's kinda cool, that would be very happying.
+    </p>
+
+    <div class="page-says-goodbye">SEE YOU WEB COWBOY...</div>
+  </body>
+</html>
