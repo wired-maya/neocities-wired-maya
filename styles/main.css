@@ -710,13 +710,11 @@ label input[type="checkbox"] {
 .nav-right {
   z-index: 0;
   
-  background-color: var(--background-bright);
   border-bottom-right-radius: 2em;
   border-top-right-radius: 2em;
 
-  &:hover {
-    color: var(--primary);
-  }
+  background-color: var(--background-bright);
+  color: var(--background);
 }
 
 .legend-enabled {
@@ -830,6 +828,83 @@ label input[type="checkbox"] {
   text-align: end;
 
   color: var(--background-bright);
+}
+
+/* TODO: Do something cool when clicked */
+.coolest-name-ever {
+  display: inline;
+  position: relative;
+  margin: -0.2em;
+  padding: 0.2em;
+  border-radius: 2em;
+  z-index: 0;
+
+  cursor: pointer;
+
+  background-color: var(--secondary);
+  color: var(--background);
+
+  &::before {
+    content: "wired_maya";
+
+    display: inline;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0.2em;
+    border-radius: 2em;
+    z-index: 0;
+
+    transition-property: transform, border-color;
+    transition-duration: var(--transition-duration);
+    transition-timing-function: ease-in-out;
+    
+    border: var(--background-bright) solid var(--border-thickness);
+
+    background-color: var(--background-bright);
+    color: var(--background);
+  }
+
+  &:hover::before {
+    transition-duration: var(--transition-decay-duration);
+
+    transform: translate(-0.35em, -0.35em);
+  }
+
+  &::after {
+    content: "wired_maya";
+
+    display: inline;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0.2em;
+    border-radius: 2em;
+    z-index: 1;
+
+    transition-property: transform, border-color;
+    transition-duration: var(--transition-duration);
+    transition-timing-function: ease-in-out;
+    
+    border: var(--background) solid var(--border-thickness);
+
+    background-color: var(--background);
+    color: var(--accent);
+  }
+
+  &:hover::after {
+    transition-duration: var(--transition-decay-duration);
+
+    transform: translate(-0.7em, -0.7em);
+
+    border-color: var(--accent);
+  }
 }
 
 /* #endregion */
