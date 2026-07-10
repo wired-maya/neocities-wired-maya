@@ -732,7 +732,7 @@ label input[type="checkbox"] {
   font-size: var(--font-very-small);
   text-wrap: balance;
 
-  margin: -2em 0;
+  margin: -2em 0 0 0;
 
   color: var(--secondary);
 }
@@ -748,7 +748,7 @@ label input[type="checkbox"] {
 }
 
 .description {
-  display: inline-block;
+  display: block;
   font-size: var(--font-very-small);
   text-wrap: balance;
 
@@ -759,15 +759,19 @@ label input[type="checkbox"] {
 
 .diagram {
   display: block;
-  max-width: calc(100% - 4em);
-  height: auto;
+  width: calc(100% - 4em);
+  height: 20em;
   margin: 0.5em 2em;
+
+  object-fit: contain;
 
   border-radius: var(--corner-radius);
   border: var(--accent) solid var(--border-thickness);
 
   background-color: #FFFFFF;
 }
+
+/* TODO: Make a .post-img and style it interestingly */
 
 .code-container {
   display: block;
