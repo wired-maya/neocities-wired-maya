@@ -169,6 +169,41 @@ html {
 
 /* #endregion */
 
+/* #region Scroll Bar Styling */
+
+/* The overall shape */
+::-webkit-scrollbar {
+  width: 1em;
+  height: 1em;
+}
+
+/* Cleaner, matches FF better */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+ 
+/* The thing you press */
+::-webkit-scrollbar-thumb {
+  background: var(--background-bright);
+  border-radius: 1em;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: var(--background-bright);
+}
+
+/* Appears when a vertical and horizontal scroll bar is present */
+::-webkit-scrollbar-corner {
+  background-color: var(--background-bright);
+  border-radius: 1em;
+}
+
+/* #endregion */
+
 /* #region Tag Styling */
 
 body {
